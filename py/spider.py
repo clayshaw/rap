@@ -27,7 +27,7 @@ def get_all_unique_symbols():
         cursor.execute(query)
 
         for (stock_symbol,) in cursor:
-            symbols.add(stock_symbol)
+            symbols.add(stock_symbol + ".TW")  # 假設所有股票都是台灣股票，添加 ".TW" 後綴
 
         print(f"資料庫中找到的股票代號: {symbols}")
         return list(symbols)

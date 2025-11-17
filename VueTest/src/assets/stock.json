@@ -1,732 +1,732 @@
 [
  {
    "industry_category": "ETF",
-   "id": "50",
+   "id": "0050",
    "name": "元大台灣50"
  },
  {
    "industry_category": "ETF",
-   "id": "51",
+   "id": "0051",
    "name": "元大中型100"
  },
  {
    "industry_category": "ETF",
-   "id": "52",
+   "id": "0052",
    "name": "富邦科技"
  },
  {
    "industry_category": "ETF",
-   "id": "53",
+   "id": "0053",
    "name": "元大電子"
  },
  {
    "industry_category": "ETF",
-   "id": "54",
+   "id": "0054",
    "name": "元大台商50"
  },
  {
    "industry_category": "ETF",
-   "id": "55",
+   "id": "0055",
    "name": "元大MSCI金融"
  },
  {
    "industry_category": "ETF",
-   "id": "56",
+   "id": "0056",
    "name": "元大高股息"
  },
  {
    "industry_category": "ETF",
-   "id": "57",
+   "id": "0057",
    "name": "富邦摩台"
  },
  {
    "industry_category": "ETF",
-   "id": "58",
+   "id": "0058",
    "name": "富邦發達"
  },
  {
    "industry_category": "ETF",
-   "id": "59",
+   "id": "0059",
    "name": "富邦金融"
  },
  {
    "industry_category": "ETF",
-   "id": "60",
+   "id": "0060",
    "name": "新台灣"
  },
  {
    "industry_category": "ETF",
-   "id": "61",
+   "id": "0061",
    "name": "元大寶滬深"
  },
  {
    "industry_category": "ETF",
-   "id": "80",
+   "id": "0080",
    "name": "恒中國"
  },
  {
    "industry_category": "ETF",
-   "id": "81",
+   "id": "0081",
    "name": "恒香港"
  },
  {
    "industry_category": "ETF",
-   "id": "636",
+   "id": "00636",
    "name": "國泰中國A50"
  },
  {
    "industry_category": "ETF",
-   "id": "639",
+   "id": "00639",
    "name": "富邦深100"
  },
  {
    "industry_category": "ETF",
-   "id": "643",
+   "id": "00643",
    "name": "群益深証中小"
  },
  {
    "industry_category": "ETF",
-   "id": "645",
+   "id": "00645",
    "name": "富邦日本"
  },
  {
    "industry_category": "ETF",
-   "id": "646",
+   "id": "00646",
    "name": "元大S&P500"
  },
  {
    "industry_category": "ETF",
-   "id": "649",
+   "id": "00649",
    "name": "FH香港"
  },
  {
    "industry_category": "ETF",
-   "id": "652",
+   "id": "00652",
    "name": "富邦印度"
  },
  {
    "industry_category": "ETF",
-   "id": "657",
+   "id": "00657",
    "name": "國泰日經225"
  },
  {
    "industry_category": "ETF",
-   "id": "660",
+   "id": "00660",
    "name": "元大歐洲50"
  },
  {
    "industry_category": "ETF",
-   "id": "661",
+   "id": "00661",
    "name": "元大日經225"
  },
  {
    "industry_category": "ETF",
-   "id": "662",
+   "id": "00662",
    "name": "富邦NASDAQ"
  },
  {
    "industry_category": "ETF",
-   "id": "667",
+   "id": "00667",
    "name": "元大韓國"
  },
  {
    "industry_category": "ETF",
-   "id": "668",
+   "id": "00668",
    "name": "國泰美國道瓊"
  },
  {
    "industry_category": "ETF",
-   "id": "678",
+   "id": "00678",
    "name": "群益那斯達克生技"
  },
  {
    "industry_category": "ETF",
-   "id": "690",
+   "id": "00690",
    "name": "兆豐藍籌30"
  },
  {
    "industry_category": "ETF",
-   "id": "692",
+   "id": "00692",
    "name": "富邦公司治理"
  },
  {
    "industry_category": "ETF",
-   "id": "700",
+   "id": "00700",
    "name": "富邦恒生國企"
  },
  {
    "industry_category": "ETF",
-   "id": "701",
+   "id": "00701",
    "name": "國泰股利精選30"
  },
  {
    "industry_category": "ETF",
-   "id": "702",
+   "id": "00702",
    "name": "國泰標普低波高息"
  },
  {
    "industry_category": "ETF",
-   "id": "703",
+   "id": "00703",
    "name": "台新MSCI中國"
  },
  {
    "industry_category": "ETF",
-   "id": "709",
+   "id": "00709",
    "name": "富邦歐洲"
  },
  {
    "industry_category": "ETF",
-   "id": "712",
+   "id": "00712",
    "name": "復華富時不動產"
  },
  {
    "industry_category": "ETF",
-   "id": "713",
+   "id": "00713",
    "name": "元大台灣高息低波"
  },
  {
    "industry_category": "ETF",
-   "id": "714",
+   "id": "00714",
    "name": "群益道瓊美國地產"
  },
  {
    "industry_category": "ETF",
-   "id": "717",
+   "id": "00717",
    "name": "富邦美國特別股"
  },
  {
    "industry_category": "ETF",
-   "id": "728",
+   "id": "00728",
    "name": "第一金工業30"
  },
  {
    "industry_category": "ETF",
-   "id": "730",
+   "id": "00730",
    "name": "富邦臺灣優質高息"
  },
  {
    "industry_category": "ETF",
-   "id": "731",
+   "id": "00731",
    "name": "復華富時高息低波"
  },
  {
    "industry_category": "ETF",
-   "id": "732",
+   "id": "00732",
    "name": "國泰RMB短期報酬"
  },
  {
    "industry_category": "ETF",
-   "id": "733",
+   "id": "00733",
    "name": "富邦臺灣中小"
  },
  {
    "industry_category": "ETF",
-   "id": "735",
+   "id": "00735",
    "name": "國泰臺韓科技"
  },
  {
    "industry_category": "ETF",
-   "id": "736",
+   "id": "00736",
    "name": "國泰新興市場"
  },
  {
    "industry_category": "ETF",
-   "id": "737",
+   "id": "00737",
    "name": "國泰AI機器人"
  },
  {
    "industry_category": "ETF",
-   "id": "739",
+   "id": "00739",
    "name": "元大MSCI A股"
  },
  {
    "industry_category": "ETF",
-   "id": "742",
+   "id": "00742",
    "name": "新光內需收益"
  },
  {
    "industry_category": "ETF",
-   "id": "743",
+   "id": "00743",
    "name": "國泰中國A150"
  },
  {
    "industry_category": "ETF",
-   "id": "752",
+   "id": "00752",
    "name": "中信中國50"
  },
  {
    "industry_category": "ETF",
-   "id": "757",
+   "id": "00757",
    "name": "統一FANG+"
  },
  {
    "industry_category": "ETF",
-   "id": "762",
+   "id": "00762",
    "name": "元大全球AI"
  },
  {
    "industry_category": "ETF",
-   "id": "767",
+   "id": "00767",
    "name": "FH美國金融股"
  },
  {
    "industry_category": "ETF",
-   "id": "770",
+   "id": "00770",
    "name": "國泰北美科技"
  },
  {
    "industry_category": "ETF",
-   "id": "771",
+   "id": "00771",
    "name": "元大US高息特別股"
  },
  {
    "industry_category": "ETF",
-   "id": "776",
+   "id": "00776",
    "name": "新光ICE美國權值"
  },
  {
    "industry_category": "ETF",
-   "id": "783",
+   "id": "00783",
    "name": "富邦中証500"
  },
  {
    "industry_category": "ETF",
-   "id": "830",
+   "id": "00830",
    "name": "國泰費城半導體"
  },
  {
    "industry_category": "ETF",
-   "id": "850",
+   "id": "00850",
    "name": "元大臺灣ESG永續"
  },
  {
    "industry_category": "ETF",
-   "id": "851",
+   "id": "00851",
    "name": "台新全球AI"
  },
  {
    "industry_category": "上櫃指數股票型基金(ETF)",
-   "id": "858",
+   "id": "00858",
    "name": "永豐美國500大"
  },
  {
    "industry_category": "上櫃ETF",
-   "id": "858",
+   "id": "00858",
    "name": "永豐美國500大"
  },
  {
    "industry_category": "ETF",
-   "id": "861",
+   "id": "00861",
    "name": "元大全球未來通訊"
  },
  {
    "industry_category": "ETF",
-   "id": "866",
+   "id": "00866",
    "name": "新光Shiller CAPE"
  },
  {
    "industry_category": "ETF",
-   "id": "875",
+   "id": "00875",
    "name": "國泰網路資安"
  },
  {
    "industry_category": "ETF",
-   "id": "876",
+   "id": "00876",
    "name": "元大全球5G"
  },
  {
    "industry_category": "上櫃指數股票型基金(ETF)",
-   "id": "877",
+   "id": "00877",
    "name": "復華中國5G"
  },
  {
    "industry_category": "上櫃ETF",
-   "id": "877",
+   "id": "00877",
    "name": "復華中國5G"
  },
  {
    "industry_category": "ETF",
-   "id": "878",
+   "id": "00878",
    "name": "國泰永續高股息"
  },
  {
    "industry_category": "ETF",
-   "id": "881",
+   "id": "00881",
    "name": "國泰台灣科技龍頭"
  },
  {
    "industry_category": "ETF",
-   "id": "882",
+   "id": "00882",
    "name": "中信中國高股息"
  },
  {
    "industry_category": "ETF",
-   "id": "885",
+   "id": "00885",
    "name": "富邦越南"
  },
  {
    "industry_category": "上櫃指數股票型基金(ETF)",
-   "id": "886",
+   "id": "00886",
    "name": "永豐美國科技"
  },
  {
    "industry_category": "上櫃ETF",
-   "id": "886",
+   "id": "00886",
    "name": "永豐美國科技"
  },
  {
    "industry_category": "上櫃指數股票型基金(ETF)",
-   "id": "887",
+   "id": "00887",
    "name": "永豐中國科技50大"
  },
  {
    "industry_category": "上櫃ETF",
-   "id": "887",
+   "id": "00887",
    "name": "永豐中國科技50大"
  },
  {
    "industry_category": "上櫃指數股票型基金(ETF)",
-   "id": "888",
+   "id": "00888",
    "name": "永豐台灣ESG"
  },
  {
    "industry_category": "上櫃ETF",
-   "id": "888",
+   "id": "00888",
    "name": "永豐台灣ESG"
  },
  {
    "industry_category": "ETF",
-   "id": "891",
+   "id": "00891",
    "name": "中信關鍵半導體"
  },
  {
    "industry_category": "ETF",
-   "id": "892",
+   "id": "00892",
    "name": "富邦台灣半導體"
  },
  {
    "industry_category": "ETF",
-   "id": "893",
+   "id": "00893",
    "name": "國泰智能電動車"
  },
  {
    "industry_category": "ETF",
-   "id": "894",
+   "id": "00894",
    "name": "中信小資高價30"
  },
  {
    "industry_category": "ETF",
-   "id": "895",
+   "id": "00895",
    "name": "富邦未來車"
  },
  {
    "industry_category": "ETF",
-   "id": "896",
+   "id": "00896",
    "name": "中信綠能及電動車"
  },
  {
    "industry_category": "ETF",
-   "id": "897",
+   "id": "00897",
    "name": "富邦基因免疫生技"
  },
  {
    "industry_category": "ETF",
-   "id": "898",
+   "id": "00898",
    "name": "國泰基因免疫革命"
  },
  {
    "industry_category": "ETF",
-   "id": "899",
+   "id": "00899",
    "name": "FT潔淨能源"
  },
  {
    "industry_category": "ETF",
-   "id": "900",
+   "id": "00900",
    "name": "富邦特選高股息30"
  },
  {
    "industry_category": "ETF",
-   "id": "901",
+   "id": "00901",
    "name": "永豐智能車供應鏈"
  },
  {
    "industry_category": "ETF",
-   "id": "902",
+   "id": "00902",
    "name": "中信電池及儲能"
  },
  {
    "industry_category": "ETF",
-   "id": "903",
+   "id": "00903",
    "name": "富邦元宇宙"
  },
  {
    "industry_category": "ETF",
-   "id": "904",
+   "id": "00904",
    "name": "新光臺灣半導體30"
  },
  {
    "industry_category": "ETF",
-   "id": "905",
+   "id": "00905",
    "name": "FT臺灣Smart"
  },
  {
    "industry_category": "ETF",
-   "id": "906",
+   "id": "00906",
    "name": "大華元宇宙科技50"
  },
  {
    "industry_category": "ETF",
-   "id": "907",
+   "id": "00907",
    "name": "永豐優息存股"
  },
  {
    "industry_category": "ETF",
-   "id": "908",
+   "id": "00908",
    "name": "富邦入息REITs+"
  },
  {
    "industry_category": "ETF",
-   "id": "909",
+   "id": "00909",
    "name": "國泰數位支付服務"
  },
  {
    "industry_category": "ETF",
-   "id": "910",
+   "id": "00910",
    "name": "第一金太空衛星"
  },
  {
    "industry_category": "ETF",
-   "id": "911",
+   "id": "00911",
    "name": "兆豐洲際半導體"
  },
  {
    "industry_category": "ETF",
-   "id": "912",
+   "id": "00912",
    "name": "中信臺灣智慧50"
  },
  {
    "industry_category": "ETF",
-   "id": "913",
+   "id": "00913",
    "name": "兆豐台灣晶圓製造"
  },
  {
    "industry_category": "ETF",
-   "id": "915",
+   "id": "00915",
    "name": "凱基優選高股息30"
  },
  {
    "industry_category": "ETF",
-   "id": "916",
+   "id": "00916",
    "name": "國泰全球品牌50"
  },
  {
    "industry_category": "ETF",
-   "id": "917",
+   "id": "00917",
    "name": "中信特選金融"
  },
  {
    "industry_category": "ETF",
-   "id": "918",
+   "id": "00918",
    "name": "大華優利高填息30"
  },
  {
    "industry_category": "ETF",
-   "id": "919",
+   "id": "00919",
    "name": "群益台灣精選高息"
  },
  {
    "industry_category": "ETF",
-   "id": "920",
+   "id": "00920",
    "name": "富邦ESG綠色電力"
  },
  {
    "industry_category": "ETF",
-   "id": "921",
+   "id": "00921",
    "name": "兆豐龍頭等權重"
  },
  {
    "industry_category": "ETF",
-   "id": "922",
+   "id": "00922",
    "name": "國泰台灣領袖50"
  },
  {
    "industry_category": "ETF",
-   "id": "923",
+   "id": "00923",
    "name": "群益台ESG低碳50"
  },
  {
    "industry_category": "ETF",
-   "id": "924",
+   "id": "00924",
    "name": "復華S&P500成長"
  },
  {
    "industry_category": "ETF",
-   "id": "925",
+   "id": "00925",
    "name": "新光標普電動車"
  },
  {
    "industry_category": "ETF",
-   "id": "926",
+   "id": "00926",
    "name": "凱基全球菁英55"
  },
  {
    "industry_category": "ETF",
-   "id": "927",
+   "id": "00927",
    "name": "群益半導體收益"
  },
  {
    "industry_category": "上櫃指數股票型基金(ETF)",
-   "id": "928",
+   "id": "00928",
    "name": "中信上櫃ESG 30"
  },
  {
    "industry_category": "上櫃ETF",
-   "id": "928",
+   "id": "00928",
    "name": "中信上櫃ESG 30"
  },
  {
    "industry_category": "ETF",
-   "id": "929",
+   "id": "00929",
    "name": "復華台灣科技優息"
  },
  {
    "industry_category": "ETF",
-   "id": "930",
+   "id": "00930",
    "name": "永豐ESG低碳高息"
  },
  {
    "industry_category": "ETF",
-   "id": "932",
+   "id": "00932",
    "name": "兆豐永續高息等權"
  },
  {
    "industry_category": "ETF",
-   "id": "934",
+   "id": "00934",
    "name": "中信成長高股息"
  },
  {
    "industry_category": "ETF",
-   "id": "935",
+   "id": "00935",
    "name": "野村臺灣新科技50"
  },
  {
    "industry_category": "ETF",
-   "id": "936",
+   "id": "00936",
    "name": "台新永續高息中小"
  },
  {
    "industry_category": "ETF",
-   "id": "938",
+   "id": "00938",
    "name": "凱基優選30"
  },
  {
    "industry_category": "ETF",
-   "id": "939",
+   "id": "00939",
    "name": "統一台灣高息動能"
  },
  {
    "industry_category": "ETF",
-   "id": "940",
+   "id": "00940",
    "name": "元大台灣價值高息"
  },
  {
    "industry_category": "ETF",
-   "id": "941",
+   "id": "00941",
    "name": "中信上游半導體"
  },
  {
    "industry_category": "ETF",
-   "id": "943",
+   "id": "00943",
    "name": "兆豐電子高息等權"
  },
  {
    "industry_category": "ETF",
-   "id": "944",
+   "id": "00944",
    "name": "野村趨勢動能高息"
  },
  {
    "industry_category": "ETF",
-   "id": "946",
+   "id": "00946",
    "name": "群益科技高息成長"
  },
  {
    "industry_category": "ETF",
-   "id": "947",
+   "id": "00947",
    "name": "台新臺灣IC設計"
  },
  {
    "industry_category": "ETF",
-   "id": "949",
+   "id": "00949",
    "name": "復華日本龍頭"
  },
  {
    "industry_category": "ETF",
-   "id": "951",
+   "id": "00951",
    "name": "台新日本半導體"
  },
  {
    "industry_category": "ETF",
-   "id": "952",
+   "id": "00952",
    "name": "凱基台灣AI50"
  },
  {
    "industry_category": "ETF",
-   "id": "954",
+   "id": "00954",
    "name": "中信日本半導體"
  },
  {
    "industry_category": "上櫃指數股票型基金(ETF)",
-   "id": "955",
+   "id": "00955",
    "name": "中信日本商社"
  },
  {
    "industry_category": "上櫃ETF",
-   "id": "955",
+   "id": "00955",
    "name": "中信日本商社"
  },
  {
    "industry_category": "ETF",
-   "id": "956",
+   "id": "00956",
    "name": "中信日經高股息"
  },
  {
    "industry_category": "ETF",
-   "id": "960",
+   "id": "00960",
    "name": "野村全球航運龍頭"
  },
  {
    "industry_category": "ETF",
-   "id": "961",
+   "id": "00961",
    "name": "FT臺灣永續高息"
  },
  {
    "industry_category": "ETF",
-   "id": "962",
+   "id": "00962",
    "name": "台新AI優息動能"
  },
  {
    "industry_category": "ETF",
-   "id": "963",
+   "id": "00963",
    "name": "中信全球高股息"
  },
  {
    "industry_category": "ETF",
-   "id": "964",
+   "id": "00964",
    "name": "中信亞太高股息"
  },
  {
    "industry_category": "ETF",
-   "id": "965",
+   "id": "00965",
    "name": "元大航太防衛科技"
  },
  {
    "industry_category": "ETF",
-   "id": "971",
+   "id": "00971",
    "name": "野村美國研發龍頭"
  },
  {
    "industry_category": "ETF",
-   "id": "972",
+   "id": "00972",
    "name": "野村日本動能高息"
  },
  {

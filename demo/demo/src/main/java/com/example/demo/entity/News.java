@@ -22,7 +22,7 @@ public class News {
     @Column
     private String stockSymbol; // 股票代號
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String title; // 新聞標題
 
     //    加上 "unique = true"

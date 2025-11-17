@@ -49,6 +49,7 @@ const fetchNews = async () => {
   loadingNews.value = true;
   try {
     const response = await api.get<NewsItem[]>('/api/news');
+    console.log('取得新聞成功:', response.data);
     newsList.value = response.data;
   } catch (err) {
     console.error('取得新聞失敗:', err);
