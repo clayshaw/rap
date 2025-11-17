@@ -1,0 +1,8 @@
+{
+    "java.project.sourcePaths": [
+        "First/src",
+        "demo/demo/src/main/java/com/example/demo"
+    ],
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "automatic"
+}

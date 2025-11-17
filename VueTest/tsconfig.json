@@ -1,0 +1,22 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
+    }
+    
+  ],
+    "compilerOptions" : {
+      "strict": false,                   // Enable all strict type-checking options.
+      "noImplicitAny": false, 
+      "paths": {
+        "@/*":["./src/*"]
+      }           // Raise error on expressions and declarations with an implied
+    }
+}
