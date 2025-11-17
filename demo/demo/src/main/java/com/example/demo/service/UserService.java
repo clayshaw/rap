@@ -62,5 +62,14 @@ public class UserService {
         return jwtService.generateToken(username);
     }
 
+    /**
+     * 根據用戶名稱查找用戶
+     * @param username 用戶名稱
+     * @return User 物件
+     */
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("Error: User not found."));
+    }
     
 }

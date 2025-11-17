@@ -3,6 +3,9 @@ import axios, { AxiosError } from 'axios'; // 匯入
 import { useAuthStore } from '@/stores/auth'; // 匯入 Pinia Store
 import router from '@/router'; // 匯入 Vue Router
 
+
+
+
 //建立一個客製化的 axios 實例
 const api = axios.create({
   baseURL: 'http://localhost:8080', // 你的後端 API 基礎 URL
@@ -56,6 +59,8 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+
 
 // 匯出這個客製化的實例
 export default api;

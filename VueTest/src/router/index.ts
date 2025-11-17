@@ -44,11 +44,19 @@ const router = createRouter({
           name: 'chat',
           component: () => import('@/views/ChatView.vue'),
           meta: { requiresAuth: true }
+        },
+        {
+          path: '/settings',
+          name: 'settings',
+          component: () => import('@/views/SettingsView.vue'), // 指向新的組件
+          meta: { requiresAuth: true } // 同樣設定需要登入
         }
       ]
     }
 ]
 })
+
+
 
 
 export default router
