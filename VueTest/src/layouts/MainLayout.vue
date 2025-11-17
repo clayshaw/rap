@@ -5,7 +5,7 @@ import Navbar from '@/components/NavbarUI.vue'
 import {
   LayoutDashboard,
   Building2,
-  BarChart3,
+  // BarChart3,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -19,7 +19,7 @@ const isMobile = ref(false)
 const navigation = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { name: 'Chat', path: '/chat', icon: Building2 },
-  { name: 'Reports', path: '/reports', icon: BarChart3 },
+  // { name: 'Reports', path: '/reports', icon: BarChart3 },
   { name: 'portfolio', path: '/portfolio', icon: CreditCard },
   { name: 'Settings', path: '/settings', icon: Settings },
 ]

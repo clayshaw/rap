@@ -1,41 +1,35 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import Card from '@/components/ui/Card.vue'
 import CardHeader from '@/components/ui/CardHeader.vue'
 import CardTitle from '@/components/ui/CardTitle.vue'
 import CardContent from '@/components/ui/CardContent.vue'
 import Button from '@/components/ui/Button.vue'
 import { onMounted } from 'vue';
-import api from '@/api'; // 1. 匯入 API 客戶端
+import api from '@/api';
 import { AxiosError } from 'axios';
-import '@/assets/index.css' 
+import '@/assets/index.css'
+import stockData from '@/assets/stock.json' // 引入 stock.json
 
+// 股票資料型別
+interface Stock {
+  industry_category: string;
+  id: string;
+  name: string;
+}
 
-
-
-
-
-
-//    * 我們只需要 PortfolioItem (單筆交易) 的型別
 interface PortfolioItem {
   id?: number;
   stockSymbol: string;
   quantity: number;
   purchasePrice: number;
-  createdAt?: string; // 交易時間
+  createdAt?: string;
 }
 
-
-
-
-
-// 2. 定義狀態變數 (State) - 加上型別 
-// 修正點 1：明確指定 allStocks 是 Stock 陣列
-// 修正點 2：明確指定 selectedStock 是 Stock 或 null
 const historyList = ref<PortfolioItem[]>([]); 
 const loadingHistory = ref(false);
-const loading = ref(false); // "新增中" 的 loading
-const error = ref(''); // 表單錯誤
+const loading = ref(false);
+const error = ref('');
 
 const form = ref<Omit<PortfolioItem, 'id' | 'createdAt'>>({
   stockSymbol: '',
@@ -43,7 +37,54 @@ const form = ref<Omit<PortfolioItem, 'id' | 'createdAt'>>({
   purchasePrice: 0
 });
 
-//    * 只抓取交易歷史 
+// 搜尋相關狀態
+const searchQuery = ref('');
+const showDropdown = ref(false);
+const stocks = ref<Stock[]>(stockData as Stock[]); // 載入股票資料
+
+// 過濾搜尋結果
+const filteredStocks = computed(() => {
+  if (!searchQuery.value) return [];
+  
+  const query = searchQuery.value.toLowerCase();
+  return stocks.value
+    .filter(stock => 
+      stock.id.toLowerCase().includes(query) || 
+      stock.name.toLowerCase().includes(query)
+    )
+    .slice(0, 10); // 限制顯示 10 筆
+});
+
+// 選擇股票（點擊後直接選擇，不需要按 Enter）
+const selectStock = (stock: Stock) => {
+  form.value.stockSymbol = stock.id;
+  searchQuery.value = `${stock.id} - ${stock.name}`;
+  showDropdown.value = false;
+  
+  // 自動聚焦到下一個輸入框（數量）
+  const quantityInput = document.querySelector('input[placeholder="數量 (股)"]') as HTMLInputElement;
+  if (quantityInput) {
+    setTimeout(() => quantityInput.focus(), 100);
+  }
+};
+
+// 處理輸入變化
+const handleSearchInput = () => {
+  showDropdown.value = searchQuery.value.length > 0;
+};
+
+// 點擊外部關閉下拉選單
+const handleClickOutside = (event: FocusEvent) => {
+  // 檢查是否點擊到下拉選單內，如果是就不關閉
+  const target = event.relatedTarget as HTMLElement;
+  if (target && target.closest('.stock-results-list')) {
+    return;
+  }
+  setTimeout(() => {
+    showDropdown.value = false;
+  }, 200);
+};
+
 const fetchHistory = async () => {
   loadingHistory.value = true;
   try {
@@ -57,7 +98,6 @@ const fetchHistory = async () => {
   }
 };
 
-// 6. (*** 簡化 ***) 新增持股
 const addHolding = async () => {
   loading.value = true;
   error.value = '';
@@ -68,14 +108,13 @@ const addHolding = async () => {
       purchasePrice: form.value.purchasePrice
     });
     
-    // 新增成功後，我們只需要 "重新整理歷史表"
     await fetchHistory(); 
 
-    // (清空表單，保持不變)
+    // 清空表單
     form.value.stockSymbol = '';
     form.value.quantity = 0;
     form.value.purchasePrice = 0;
-
+    searchQuery.value = '';
 
   } catch (err) {
     console.error('新增持股失敗:', err);
@@ -89,27 +128,15 @@ const addHolding = async () => {
   }
 };
 
-// (格式化時間函式，保持不變)
 const formatDateTime = (isoString: string) => {
   if (!isoString) return 'N/A';
   const date = new Date(isoString);
-  return date.toLocaleString('zh-TW'); // 格式化為台灣本地時間
+  return date.toLocaleString('zh-TW');
 };
-
-
-
-
-
-
-
 
 onMounted(() => {
   fetchHistory();
 });
-
-
-
-
 </script>
 
 <template>
@@ -122,26 +149,52 @@ onMounted(() => {
       <CardHeader>
         <CardTitle>新增持股</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div class="space-y-2">
-          <form @submit.prevent="addHolding" class="holding-form">
-          <div class="form-row">
-            <input v-model.number="form.stockSymbol" placeholder="股票代號" style="border: 2px solid #ccc;outline: none;border-radius: 6px;margin-right: 7px;" required />
-            <input v-model.number="form.quantity" placeholder="數量 (股)" style="border: 2px solid #ccc;outline: none;border-radius: 6px;margin-right: 7px;" required />
-            <input v-model.number="form.purchasePrice"  placeholder="買入價格" style="border: 2px solid #ccc;outline: none;border-radius: 6px;margin-right: 7px;" required />
+      <CardContent style="overflow: visible;">
+        <div class="space-y-2" style="overflow: visible;">
+          <form @submit.prevent="addHolding" class="holding-form" style="overflow: visible;">
+          <div class="form-row" style="overflow: visible;">
+            <!-- 股票搜尋輸入框 -->
+            <div class="stock-search-container">
+              <input 
+                v-model="searchQuery"
+                @input="handleSearchInput"
+                @blur="handleClickOutside"
+                placeholder="搜尋股票代號或名稱" 
+                style="border: 2px solid #ccc;outline: none;border-radius: 6px;margin-right: 7px;padding: 8px 12px;width: 100%;" 
+                required 
+                autocomplete="off"
+              />
+              
+              <!-- 下拉選單 -->
+              <ul v-if="showDropdown && filteredStocks.length > 0" class="stock-results-list">
+                <li 
+                  v-for="stock in filteredStocks" 
+                  :key="stock.id"
+                  @click="selectStock(stock)"
+                  class="stock-result-item"
+                >
+                  <strong>{{ stock.id }}</strong> - {{ stock.name }}
+                  <span class="stock-category">{{ stock.industry_category }}</span>
+                </li>
+              </ul>
+              
+              <!-- 無結果提示 -->
+              <div v-if="showDropdown && searchQuery && filteredStocks.length === 0" class="no-results">
+                找不到相關股票
+              </div>
+            </div>
+            
+            <input v-model.number="form.quantity" placeholder="數量 (股)" style="border: 2px solid #ccc;outline: none;border-radius: 6px;margin-right: 7px;padding: 8px 12px;" required />
+            <input v-model.number="form.purchasePrice"  placeholder="買入價格" style="border: 2px solid #ccc;outline: none;border-radius: 6px;margin-right: 7px;padding: 8px 12px;" required />
             <Button size="sm"  type="submit" :disabled="loading">
               新增持股
             </Button>
-
           </div>
           <p v-if="error" class="error-message">{{ error }}</p>
         </form>
-
         </div>
       </CardContent>
     </Card>
-
-    
 
     <Card class="mt-6">
       <CardHeader>
@@ -149,14 +202,11 @@ onMounted(() => {
       </CardHeader>
       <CardContent>
         <div class="space-y-2">
-          
           <div class="hidden md:grid grid-cols-5 gap-5 px-5 py-2 text-sm font-medium text-muted-foreground border-b">
             <div>portfolio_name</div>
             <div>Date</div>
             <div>Amount</div>
             <div>price</div>
-            <!-- <div>Status</div> -->
-            
           </div>
 
           <div
@@ -180,14 +230,6 @@ onMounted(() => {
               <span class="text-sm md:hidden font-medium text-muted-foreground">price</span>
               <span>${{ item.purchasePrice }}</span>
             </div>
-            <!-- <div class="flex justify-between md:block items-center">
-              <span class="text-sm md:hidden font-medium text-muted-foreground">Status</span>
-              <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  {{ portfolio_name.status }}
-                </span>
-              </div>
-            </div> -->
           </div>
         </div>
       </CardContent>
@@ -195,45 +237,84 @@ onMounted(() => {
   </div>
 </template>
 
-
 <style scoped>
-/* 6. 加上一點基本樣式 */
 .stock-search-container {
-  position: relative; /* 關鍵：讓 ul 可以定位在 input 下方 */
-  width: 300px;
+  position: relative;
+  width: 250px;
   font-family: Arial, sans-serif;
-}
-
-#stock-search {
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 16px;
-  box-sizing: border-box; /* 確保 padding 不會讓寬度超出去 */
+  z-index: 10; /* 確保在上層 */
 }
 
 .stock-results-list {
   position: absolute;
-  top: 100%; /* 顯示在 input 的正下方 */
+  top: 100%;
   left: 0;
   right: 0;
   background-color: white;
-  border: 1px solid #000000;
+  border: 2px solid #ccc;
   border-top: none;
+  border-radius: 0 0 6px 6px;
   list-style: none;
   margin: 0;
   padding: 0;
-  max-height: 100px; /* 加上最大高度和捲軸 */
+  max-height: 250px;
   overflow-y: auto;
-  z-index: 1000; /* 確保在最上層 */
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 9999; /* 提高 z-index 確保在最上層 */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .stock-result-item {
-  padding: 8px 12px;
+  padding: 10px 12px;
   cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
 }
 
 .stock-result-item:hover {
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
+}
+
+.stock-result-item:last-child {
+  border-bottom: none;
+}
+
+.stock-category {
+  float: right;
+  font-size: 12px;
+  color: #666;
+  background: #e8e8e8;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.no-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  padding: 12px;
+  color: #999;
+  text-align: center;
+  z-index: 9999; /* 同樣提高 z-index */
+}
+
+.form-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.holding-form {
+  width: 100%;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 14px;
+  margin-top: 8px;
 }
 </style>

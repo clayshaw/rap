@@ -42,30 +42,31 @@ def get_all_unique_symbols():
 
 def fetch_news_for_symbol(symbol):
     """
-    抓取 "單一" 股票的新聞
+    抓取 "所有" 股票的新聞
     """
-    po = yf.Ticker(symbol)
+    tickers = yf.Tickers(symbol)
     extracted_news = []
-    news = [news_item for news_item in po.news]
 
-    for item in news:
-        content = item.get('content',{'No content available'})
-        
-        title = content.get('title', {'No title available'})
-        time_str = content.get('pubDate', {'No time available'})
+    for symbol in tickers.symbols:
+        ticker = tickers.tickers[symbol]
+        news = [news_item for news_item in ticker.news]
+        for item in news:
+            content = item.get('content',{'No content available'})
+            
+            title = content.get('title', {'No title available'})
+            time_str = content.get('pubDate', {'No time available'})
 
-        url = content.get('clickThroughUrl',{'No link available'})
-        dt_object = str(time_str).replace('T', ' ').replace('Z', '')
-
-        if url:
-            url = url.get('url', {'No link available'})
+            url = content.get('clickThroughUrl',{'No link available'})
+            if url:
+                url = url.get('url', {'No link available'})
+            dt_object = str(time_str).replace('T', ' ').replace('Z', '')
             extracted_news.append({
                 'createdAt' : dt_object,
                 'stockSymbol': symbol, 
                 'title': title, 
                 'url': url
             })
-        print
+
     return extracted_news
 
 def save_news_to_db(news_list):
@@ -111,10 +112,9 @@ if __name__ == "__main__":
     else:
         all_news = []
         # 2. 為每支股票抓新聞
-        for symbol in symbols_to_fetch:
-            print(f"正在爬取 {symbol} 的新聞...")
-            news_data = fetch_news_for_symbol(symbol)
-            all_news.extend(news_data)
+
+        news_data = fetch_news_for_symbol(symbols_to_fetch)
+        all_news.extend(news_data)
 
         # 3. 一次性全部存入資料庫
         if all_news:
@@ -122,5 +122,6 @@ if __name__ == "__main__":
             save_news_to_db(all_news)
         else:
             print("所有股票都沒有爬取到任何新新聞。")
+
 
     print("--- 爬蟲執行完畢 ---")
