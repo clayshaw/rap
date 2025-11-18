@@ -46,6 +46,12 @@ const router = createRouter({
           meta: { requiresAuth: true }
         },
         {
+          path: '/stock',
+          name: 'stock',
+          component: () => import('@/views/StockListView.vue'),
+          meta: { requiresAuth: false } // 根據您的需求設定是否需要登入
+        },
+        {
           path: '/settings',
           name: 'settings',
           component: () => import('@/views/SettingsView.vue'), // 指向新的組件

@@ -41,9 +41,20 @@ interface NewsItem {
   createdAt: string;
 }
 
+interface PortfolioItem {
+  id?: number;
+  stockSymbol: string;
+  quantity: number;
+  purchasePrice: number;
+  createdAt?: string;
+}
+
 
 const newsList = ref<NewsItem[]>([]);
 const loadingNews = ref(false);
+const totalAssets = ref(0);
+const loadingHistory = ref(false);
+const historyList = ref<PortfolioItem[]>([]);
 
 const fetchNews = async () => {
   loadingNews.value = true;
@@ -56,6 +67,32 @@ const fetchNews = async () => {
   } finally {
     loadingNews.value = false;
   }
+};
+
+const fetchTotalAssets = async () => {
+  loadingHistory.value = true;
+  try {
+    const response = await api.get<PortfolioItem[]>('/api/portfolio/history');
+    const data = response.data ?? [];
+    if (data.length === 0) {
+      totalAssets.value = 0;
+      historyList.value = [];
+      return;
+    }
+    totalAssets.value = 0;
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      if (item && typeof item.quantity === 'number' && typeof item.purchasePrice === 'number') {
+        totalAssets.value += item.quantity * item.purchasePrice;
+      }
+    }
+    historyList.value = data;
+  } catch (err) {
+    console.error('取得交易歷史失敗:', err);
+  } finally {
+    loadingHistory.value = false;
+  }
+  
 };
 
 const revenueData = computed<ChartData<'line'>>(() => ({
@@ -102,6 +139,7 @@ const revenueOptions = computed<ChartOptions<'line'>>(() => ({
 
 onMounted(() => {
   fetchNews(); // <-- 呼叫新函式
+  fetchTotalAssets();
 });
 </script>
 
@@ -119,7 +157,7 @@ onMounted(() => {
           <Users class="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div class="text-2xl font-bold">1,234</div>
+          <div class="text-2xl font-bold">{{historyList.length}}</div>
           <p class="text-xs text-muted-foreground">+12% from last month</p>
         </CardContent>
       </Card>
@@ -130,7 +168,7 @@ onMounted(() => {
           <TrendingUp class="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div class="text-2xl font-bold">89</div>
+          <div class="text-2xl font-bold">{{totalAssets}}</div>
           <p class="text-xs text-muted-foreground">+23% from last month</p>
         </CardContent>
       </Card>
@@ -141,8 +179,8 @@ onMounted(() => {
           <DollarSign class="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div class="text-2xl font-bold">$234,567</div>
-          <p class="text-xs text-muted-foreground">+18% from last month</p>
+          <div class="text-2xl font-bold">{{ }} </div>
+          <p class="text-xs text-muted-foreground">{{}}</p>
         </CardContent>
       </Card>
     </div>

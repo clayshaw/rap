@@ -83,7 +83,7 @@ def save_news_to_db(news_list):
         # 2. 我們現在寫入 "stock_symbol", "title", "url"
         query = "INSERT IGNORE INTO news (created_at,stock_symbol, title, url) VALUES (%s,%s, %s, %s)"
 
-        data_to_insert = [(item['createdAt'],item['stockSymbol'], item['title'], item['url']) for item in news_list]
+        data_to_insert = [(item['createdAt'],item['stockSymbol'].replace('.TW',''), item['title'], item['url']) for item in news_list]
 
         if data_to_insert:
             cursor.executemany(query, data_to_insert)

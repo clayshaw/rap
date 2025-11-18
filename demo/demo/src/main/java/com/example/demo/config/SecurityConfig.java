@@ -88,7 +88,11 @@ public class SecurityConfig {
         
         // 允許來自 Vue 伺服器的請求
         // (請改成你 Vue 執行時的準確 URL，通常是 5173)
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); 
+        configuration.setAllowedOrigins(List.of(
+            "http://localhost:5173",
+            "http://10.244.208.177:5173/",
+            "http://192.168.0.101:5173/"
+            )); 
         
         // 允許所有請求方法 (GET, POST, PUT, DELETE...)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));

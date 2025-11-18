@@ -48,8 +48,8 @@ onMounted(async () => {
 })
 
 const handleUpdate = () => {
-  // TODO: 實作更新 email 的 API 呼叫
-  alert('更新 Email 的 API 尚未實作')
+  
+  alert('更新的 API 尚未實作')
 }
 
 </script>
