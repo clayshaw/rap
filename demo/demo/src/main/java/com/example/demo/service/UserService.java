@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,16 +50,17 @@ public class UserService {
 
     public String loginUser(String username, String password) {
 
+        // 1. 找不到使用者時，拋出 BadCredentialsException
         User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new RuntimeException("Error: User not found."));
+            .orElseThrow(() -> new BadCredentialsException("Error: User not found.")); // [修改]
 
+        // 2. 密碼錯誤時，拋出 BadCredentialsException
         boolean isPasswordMatch = passwordEncoder.matches(password, user.getPassword());
 
         if (!isPasswordMatch) {
-            throw new RuntimeException("Error: Invalid password.");
+            throw new BadCredentialsException("Error: Invalid password."); // [修改]
         }
 
-        //如果都通過，產生並回傳 Token
         return jwtService.generateToken(username);
     }
 

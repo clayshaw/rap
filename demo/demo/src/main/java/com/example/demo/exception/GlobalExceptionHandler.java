@@ -4,26 +4,35 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException; // [新增]
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice // 告訴 Spring 這是全域例外處理器
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
-     * 專門處理我們在 Service 中手動拋出的 RuntimeException
+     * [新增] 專門處理認證失敗 (401 Unauthorized)
+     * 當 UserService 拋出 BadCredentialsException 時會進入這裡
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
+        Map<String, String> errorResponse = Map.of(
+            "message", ex.getMessage() // 例如 "Error: Invalid password."
+        );
+        // 回傳 401 狀態碼
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * 處理其他 RuntimeException (維持原本的 400 Bad Request)
+     * 例如註冊時的使用者名稱重複等邏輯錯誤
      */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
-
-        // 1. (*** 關鍵 ***)
-        //    我們建立一個 JSON 物件 (Map)，只包含 "message" 欄位
         Map<String, String> errorResponse = Map.of(
-            "message", ex.getMessage() // 取得 "Error: Username is already taken!"
+            "message", ex.getMessage()
         );
-
-        // 2. 回傳 400 Bad Request，並在 body 中放入 JSON
-        // (400 比 500 更適合用於 "使用者輸入錯誤" 的情境)
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

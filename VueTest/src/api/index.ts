@@ -43,7 +43,7 @@ api.interceptors.response.use(
   (error: AxiosError) => { // 明確指定 error 型別
     // 失敗的回應 (4xx, 5xx 狀態碼)
     if (error.response && error.response.status === 403) {
-      // 如果是 401 (未授權)，代表 Token 失效或被竄改
+      // 代表 Token 失效或被竄改
       // 我們可以自動執行 "登出"
       const authStore = useAuthStore();
       authStore.logout();

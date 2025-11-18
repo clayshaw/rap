@@ -6,7 +6,6 @@ import Card from '@/components/ui/Card.vue';
 import CardContent from '@/components/ui/CardContent.vue';
 import CardHeader from '@/components/ui/CardHeader.vue';
 
-
 // 定義股票資料的型別
 interface Stock {
   id: string;
@@ -17,10 +16,10 @@ interface Stock {
 // 狀態
 const searchQuery = ref('');
 const selectedStock = ref<Stock | null>(null);
-const currentSymbol = ref('2330');
+const currentSymbol = ref('2330'); // 預設台積電
 const currentMarket = ref('TWSE');
 
-// 判斷市場別 (簡單判斷：如果分類包含"上櫃"或是某些特定代號，則為 TPEX，否則預設 TWSE)
+// 判斷市場別
 const getMarket = (stock: Stock) => {
   if (stock.industry_category.includes('上櫃') || stock.id === 'TPEx') {
     return 'TPEX';
@@ -29,7 +28,6 @@ const getMarket = (stock: Stock) => {
 };
 
 // 搜尋過濾
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const filteredStocks = computed(() => {
   const query = searchQuery.value.toLowerCase();
   let result = stocksData as Stock[];
@@ -41,8 +39,7 @@ const filteredStocks = computed(() => {
       s.industry_category.includes(query)
     );
   }
-  
-  // 限制顯示前 100 筆，避免過多資料導致卡頓
+  // 限制顯示筆數，優化效能
   return result.slice(0, 100);
 });
 
@@ -55,7 +52,6 @@ const selectStock = (stock: Stock) => {
 
 // 初始化
 onMounted(() => {
-  // 預設選第一筆或台積電
   const initial = (stocksData as Stock[]).find(s => s.id === '2330');
   if (initial) selectStock(initial);
 });
@@ -64,7 +60,7 @@ onMounted(() => {
 <template>
   <Card class="flex h-[calc(100vh-4rem)] bg-gray-100">
     
-    <!-- <div class="w-1/3 md:w-1/4 bg-white border-r border-gray-200 flex flex-col">
+    <div class="w-1/3 md:w-1/4 bg-white border-r border-gray-200 flex flex-col">
       <div class="p-4 border-b border-gray-200">
         <h2 class="text-xl font-bold mb-4 text-gray-800">股票列表</h2>
         <input 
@@ -94,14 +90,13 @@ onMounted(() => {
           找不到符合的股票
         </div>
       </div>
-    </div> -->
-
+    </div>
     <Card class="flex-1 p-4 flex flex-col">
       <CardHeader class="mb-4 flex justify-between items-center">
-        <!-- <h1 class="text-2xl font-bold text-gray-800">
+        <h1 class="text-2xl font-bold text-gray-800">
           {{ selectedStock?.name || '台積電' }} 
           <span class="text-lg text-gray-500 font-normal">({{ currentSymbol }})</span>
-        </h1> -->
+        </h1>
         <div class="text-sm text-gray-500">
           資料來源: TradingView
         </div>

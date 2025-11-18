@@ -173,7 +173,7 @@ const handleLogin = async () => {
     if (error instanceof AxiosError) {
       // (我幫你修正了 403 錯誤的判斷)
       if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-        errorMessage.value = '使用者名稱或密碼錯誤。';
+        errorMessage.value = error.response.data.message;
       } else {
         errorMessage.value = '登入時發生錯誤，請稍後再試。';
       }
