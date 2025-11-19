@@ -228,7 +228,7 @@ onMounted(() => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recommand</CardTitle>
+          <CardTitle>TODAY analysis</CardTitle>
         </CardHeader>
         <CardContent>
           <div class="space-y-4">

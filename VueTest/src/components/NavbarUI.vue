@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-// import { Search, Menu, } from 'lucide-vue-next'
+import { Search, Menu } from 'lucide-vue-next'
 
 defineProps<{
   onToggleSidebar: () => void
