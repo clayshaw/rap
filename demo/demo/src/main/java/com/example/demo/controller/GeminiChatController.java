@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,14 +57,14 @@ public class GeminiChatController {
         }
 
         // 呼叫 GenimiService 查詢這些股票的推薦理由
-        List<String> recommendations = List.of();
-        // for (String symbol : userSymbols) {
-        //     System.out.println("取得推薦理由 for stock: " + symbol);
+        List<String> recommendations = new ArrayList<>();
+        for (String symbol : userSymbols) {
+            System.out.println("取得推薦理由 for stock: " + symbol);
             List<GeminiMessageDto> message = List.of(
-                new GeminiMessageDto("user", "請分析近日 " + "2330" + ".TW 新聞,價格,技術指標等等消息分析走勢")
+                new GeminiMessageDto("user", "請分析近日 " + symbol + ".TW 新聞,價格,技術指標等等消息分析走勢 請用50字內中文說明")
             );
-            recommendations.add(genimiService.generateChatResponse(message));
-        // }
+            recommendations.add(symbol+"\n"+genimiService.generateChatResponse(message));
+        }
          // 這裡需要根據實際需求返回適當的結果
          return recommendations;
     }

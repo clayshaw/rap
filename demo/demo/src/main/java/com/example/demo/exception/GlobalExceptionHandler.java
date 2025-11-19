@@ -30,8 +30,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+
+        String errorMessage = ex.getMessage() != null ? ex.getMessage() : "An unexpected application error occurred.";
         Map<String, String> errorResponse = Map.of(
-            "message", ex.getMessage()
+            "message", errorMessage
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }

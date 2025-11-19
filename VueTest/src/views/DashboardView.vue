@@ -49,11 +49,11 @@ interface PortfolioItem {
   createdAt?: string;
 }
 
-interface Recommendation {
-  id: number;
-  stockSymbol: string;
+interface RecommendationItem {
+  symbol: string;
   reason: string;
 }
+
 
 
 const newsList = ref<NewsItem[]>([]);
@@ -61,7 +61,8 @@ const loadingNews = ref(false);
 const totalAssets = ref(0);
 const loadingHistory = ref(false);
 const historyList = ref<PortfolioItem[]>([]);
-const recommendations = ref<Recommendation[]>([]);
+const recommendations = ref<string[]>([]);
+const recommendationItems = ref<RecommendationItem[]>([]);
 
 const fetchNews = async () => {
   loadingNews.value = true;
@@ -146,9 +147,19 @@ const revenueOptions = computed<ChartOptions<'line'>>(() => ({
 
 const fetRecommandations = async () => {
   try {
-    const response = await api.get('/api/genimi/recommendations');
+    const response = await api.get('/api/gemini/recommendations');
     recommendations.value = response.data;
-    console.log('取得推薦成功:', response.data);
+    for (let i = 0; i < recommendations.value.length; i++) {
+      for(let j =0;j< recommendations.value[i].length;j++){
+        if(recommendations.value[i][j] == '\n'){
+          recommendationItems.value.push({
+            symbol: recommendations.value[i].substring(0,j).trim(),
+            reason: recommendations.value[i].substring(j+1).trim()
+          });
+        }
+      }
+    }
+
   } catch (err) {
     console.error('取得推薦失敗:', err);
   }
@@ -249,7 +260,16 @@ onMounted(() => {
           <CardTitle>TODAY analysis</CardTitle>
         </CardHeader>
         <CardContent>
-          <div class="text-muted-foreground">Coming soon...</div>
+          <div v-if="recommendationItems.length === 0" class="text-muted-foreground">
+            分析資料載入中...
+          </div>
+
+          <div v-else class="space-y-4">
+            <div v-for="item in recommendationItems" :key="item.symbol" class="p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+              <h2 class="text-lg font-semibold">{{ item.symbol }}</h2>
+              <p class="text-sm text-gray-600 mt-2">{{ item.reason }}</p>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -9,7 +9,7 @@ import router from '@/router'; // 匯入 Vue Router
 //建立一個客製化的 axios 實例
 const api = axios.create({
   baseURL: 'http://10.244.208.177:8080', // 你的後端 API 基礎 URL
-  timeout: 10000, // 請求超時
+  timeout: 1000000, // 請求超時
 });
 
 // 建立「請求攔截器」
