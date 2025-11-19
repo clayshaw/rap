@@ -49,12 +49,19 @@ interface PortfolioItem {
   createdAt?: string;
 }
 
+interface Recommendation {
+  id: number;
+  stockSymbol: string;
+  reason: string;
+}
+
 
 const newsList = ref<NewsItem[]>([]);
 const loadingNews = ref(false);
 const totalAssets = ref(0);
 const loadingHistory = ref(false);
 const historyList = ref<PortfolioItem[]>([]);
+const recommendations = ref<Recommendation[]>([]);
 
 const fetchNews = async () => {
   loadingNews.value = true;
@@ -137,9 +144,20 @@ const revenueOptions = computed<ChartOptions<'line'>>(() => ({
   }
 }))
 
+const fetRecommandations = async () => {
+  try {
+    const response = await api.get('/api/genimi/recommendations');
+    recommendations.value = response.data;
+    console.log('取得推薦成功:', response.data);
+  } catch (err) {
+    console.error('取得推薦失敗:', err);
+  }
+};
+
 onMounted(() => {
   fetchNews(); // <-- 呼叫新函式
   fetchTotalAssets();
+  fetRecommandations();
 });
 </script>
 
@@ -231,29 +249,7 @@ onMounted(() => {
           <CardTitle>TODAY analysis</CardTitle>
         </CardHeader>
         <CardContent>
-          <div class="space-y-4">
-            <div class="flex items-center gap-3">
-              <input type="checkbox" class="w-4 h-4 rounded border-input" />
-              <div class="flex-1">
-                <p class="text-sm font-medium">Call with prospect</p>
-                <p class="text-xs text-muted-foreground">Today at 2:00 PM</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-3">
-              <input type="checkbox" class="w-4 h-4 rounded border-input" />
-              <div class="flex-1">
-                <p class="text-sm font-medium">Send proposal</p>
-                <p class="text-xs text-muted-foreground">Tomorrow at 10:00 AM</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-3">
-              <input type="checkbox" class="w-4 h-4 rounded border-input" />
-              <div class="flex-1">
-                <p class="text-sm font-medium">Review contracts</p>
-                <p class="text-xs text-muted-foreground">Friday at 3:00 PM</p>
-              </div>
-            </div>
-          </div>
+          <div class="text-muted-foreground">Coming soon...</div>
         </CardContent>
       </Card>
     </div>
