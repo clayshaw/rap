@@ -55,6 +55,8 @@ public class GeminiChatController {
             // 如果使用者沒有持股，回傳空列表
             return  List.of();
         }
+        //去掉重複的股票代碼
+        userSymbols = new ArrayList<>(new java.util.HashSet<>(userSymbols));
 
         // 呼叫 GenimiService 查詢這些股票的推薦理由
         List<String> recommendations = new ArrayList<>();
