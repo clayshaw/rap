@@ -4,6 +4,7 @@ import Card from '@/components/ui/Card.vue'
 import CardHeader from '@/components/ui/CardHeader.vue'
 import CardTitle from '@/components/ui/CardTitle.vue'
 import CardContent from '@/components/ui/CardContent.vue'
+import Button from '@/components/ui/Button.vue'
 import { Users,  TrendingUp, DollarSign } from 'lucide-vue-next'
 import { Line } from 'vue-chartjs'
 import { ref, onMounted} from 'vue';
@@ -64,10 +65,9 @@ const loadingNews = ref(false);
 const groupedNews = computed(() => {
   const groups: Record<string, NewsItem[]> = {};
   newsList.value.forEach(news => {
-    if (!groups[news.stockSymbol]) {
-      groups[news.stockSymbol] = [];
-    }
-    groups[news.stockSymbol].push(news);
+    const key = news.stockSymbol ?? 'unknown';
+    groups[key] = groups[key] ?? [];
+    groups[key].push(news);
   });
   return groups;
 });
@@ -77,6 +77,7 @@ const loadingHistory = ref(false);
 const historyList = ref<PortfolioItem[]>([]);
 const recommendations = ref<string[]>([]);
 const recommendationItems = ref<RecommendationItem[]>([]);
+const isRecommendationsClicked = ref(false);
 
 const fetchNews = async () => {
   loadingNews.value = true;
@@ -122,7 +123,7 @@ const revenueData = computed<ChartData<'line'>>(() => ({
   datasets: [
     {
       label: 'Revenue',
-      data: [185000, 198000, 192000, 225000, 210000, 234567],
+      data: [3000, 5000, 4000, 7000, 6000, 8000],
       borderColor: 'rgb(59, 130, 246)',
       backgroundColor: 'rgba(59, 130, 246, 0.1)',
       tension: 0.4,
@@ -143,7 +144,7 @@ const revenueOptions = computed<ChartOptions<'line'>>(() => ({
         label: (context) => {
           const value = context.parsed.y
           if(value != null){
-            return `Revenue: $${(value / 100).toFixed(0)}k`
+            return `Revenue: $${(value / 1000).toFixed(0)}k`
           }
         }
       }
@@ -161,16 +162,24 @@ const revenueOptions = computed<ChartOptions<'line'>>(() => ({
 
 const fetRecommandations = async () => {
   try {
+    isRecommendationsClicked.value = true;
     const response = await api.get('/api/gemini/recommendations');
-    recommendations.value = response.data;
+    recommendations.value = response.data ?? [];
     for (let i = 0; i < recommendations.value.length; i++) {
-      for(let j =0;j< recommendations.value[i].length;j++){
-        if(recommendations.value[i][j] == '\n'){
-          recommendationItems.value.push({
-            symbol: recommendations.value[i].substring(0,j).trim(),
-            reason: recommendations.value[i].substring(j+1).trim()
-          });
-        }
+      const rec = recommendations.value[i];
+      if (!rec) continue;
+      const newlineIndex = rec.indexOf('\n');
+      if (newlineIndex !== -1) {
+        recommendationItems.value.push({
+          symbol: rec.substring(0, newlineIndex).trim(),
+          reason: rec.substring(newlineIndex + 1).trim()
+        });
+      } else {
+        // No newline found — store the whole string as symbol and leave reason empty
+        recommendationItems.value.push({
+          symbol: rec.trim(),
+          reason: ''
+        });
       }
     }
 
@@ -182,7 +191,7 @@ const fetRecommandations = async () => {
 onMounted(() => {
   fetchNews();
   fetchTotalAssets();
-  fetRecommandations();
+  // fetRecommandations();
 });
 </script>
 
@@ -276,6 +285,7 @@ onMounted(() => {
                       }) }}
                     </p>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -288,10 +298,13 @@ onMounted(() => {
           <CardTitle>TODAY analysis</CardTitle>
         </CardHeader>
         <CardContent>
-          <div v-if="recommendationItems.length === 0" class="text-muted-foreground">
-            分析資料載入中...
+          <Button v-if="!isRecommendationsClicked" @click="fetRecommandations">載入推薦</Button>
+          <div v-if="recommendationItems.length === 0 && !isRecommendationsClicked" class="text-muted-foreground">
+            點擊上方按鈕以載入推薦。
           </div>
-
+          <div v-else-if="recommendationItems.length === 0 && isRecommendationsClicked" class="text-muted-foreground">
+            分析資料載入中
+          </div>
           <div v-else class="space-y-4">
             <div v-for="item in recommendationItems" :key="item.symbol" class="p-4 border rounded-lg hover:bg-gray-50 transition-colors">
               <h2 class="text-lg font-semibold">{{ item.symbol }}</h2>

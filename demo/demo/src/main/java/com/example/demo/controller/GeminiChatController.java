@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.GeminiChatRequest; 
-import com.example.demo.dto.GeminiMessageDto;
+import com.example.demo.dto.GeminiChatRequest;
 import com.example.demo.service.GenimiService;
 import com.example.demo.service.PortfolioService;
 
@@ -62,10 +61,11 @@ public class GeminiChatController {
         List<String> recommendations = new ArrayList<>();
         for (String symbol : userSymbols) {
             System.out.println("取得推薦理由 for stock: " + symbol);
-            List<GeminiMessageDto> message = List.of(
-                new GeminiMessageDto("user", "請分析近日 " + symbol + ".TW 新聞,價格,技術指標等等消息分析走勢 請用50字內中文說明")
-            );
-            recommendations.add(symbol+"\n"+genimiService.generateChatResponse(message));
+            // List<GeminiMessageDto> message = List.of(
+            //     new GeminiMessageDto("user", "請分析近日 " + symbol + ".TW 新聞,價格,技術指標等等消息分析走勢 請用50字內中文說明")
+            // );
+            // recommendations.add(symbol+"\n"+genimiService.generateChatResponse(message));
+            recommendations.add(symbol+"\n"+genimiService.GenerateTextFromTextInput("請分析近日 " + symbol + ".TW 新聞,價格,技術指標等等消息分析走勢 請用50字內中文說明"));
         }
          // 這裡需要根據實際需求返回適當的結果
          return recommendations;
