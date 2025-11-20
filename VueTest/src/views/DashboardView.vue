@@ -36,6 +36,7 @@ ChartJS.register(
 
 interface NewsItem {
   id: number;
+  stockSymbol: string;
   title: string;
   url: string;
   createdAt: string;
@@ -58,6 +59,19 @@ interface RecommendationItem {
 
 const newsList = ref<NewsItem[]>([]);
 const loadingNews = ref(false);
+
+// 計算按股票代碼分組的新聞
+const groupedNews = computed(() => {
+  const groups: Record<string, NewsItem[]> = {};
+  newsList.value.forEach(news => {
+    if (!groups[news.stockSymbol]) {
+      groups[news.stockSymbol] = [];
+    }
+    groups[news.stockSymbol].push(news);
+  });
+  return groups;
+});
+
 const totalAssets = ref(0);
 const loadingHistory = ref(false);
 const historyList = ref<PortfolioItem[]>([]);
@@ -166,7 +180,7 @@ const fetRecommandations = async () => {
 };
 
 onMounted(() => {
-  fetchNews(); // <-- 呼叫新函式
+  fetchNews();
   fetchTotalAssets();
   fetRecommandations();
 });
@@ -240,19 +254,33 @@ onMounted(() => {
             目前沒有新聞。
           </div>
 
-          <div v-else class="space-y-4">
-            
-            <div v-for="news in newsList" :key="news.id" class="flex items-start gap-3">  
-              <div class="w-2 h-2 rounded-full mt-2 bg-blue-600 hover:bg-blue-700"></div>
-              <div class="flex-1">
-                <p class="text-sm font-medium">
-                  <a :href="news.url" target="_blank" rel="noopener noreferrer" class="hover:underline">
-                    {{ news.title }}
-                  </a>
-                </p>
+          <div v-else class="space-y-6">
+            <!-- 按股票代碼分組顯示 -->
+            <div v-for="(newsItems, stockSymbol) in groupedNews" :key="stockSymbol" class="space-y-3">
+              <h3 class="text-sm font-semibold text-blue-600 border-b pb-2">{{ stockSymbol }}</h3>
+              <div class="space-y-3">
+                <div v-for="news in newsItems" :key="news.id" class="flex items-start gap-3 pl-2">  
+                  <div class="w-2 h-2 rounded-full mt-2 bg-blue-600 hover:bg-blue-700"></div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium">
+                      <a :href="news.url" target="_blank" rel="noopener noreferrer" class="hover:underline">
+                        {{ news.title }}
+                      </a>
+                    </p>
+                    <p class="text-xs text-muted-foreground mt-1">
+                      {{ new Date(news.createdAt).toLocaleString('zh-TW', { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      }) }}
+                    </p>
+                  </div>
                 </div>
-
-            </div> </div> </CardContent>
+              </div>
+            </div>
+          </div>
+        </CardContent>
       </Card>
 
       <Card>
