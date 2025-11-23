@@ -5,6 +5,7 @@ from mysql.connector import Error
 import datetime
 import json
 import ast
+import twstock
 
 
 # (*** 1. 你的資料庫連線設定 ***)
@@ -88,11 +89,8 @@ def transform_json_structure(input_file, output_file):
 
     # 寫入新檔案
     with open(output_file, 'w', encoding='utf-8') as f:
-        entries_str = [json.dumps(entry, indent=4, ensure_ascii=False) for entry in output_list]
+        json.dump(entry,f, indent=4, ensure_ascii=False)
         
-        final_content = ",\n".join(entries_str)
-        
-        f.write(final_content)
     
     print(f"轉換完成！檔案已儲存為: {output_file}")
 
@@ -102,22 +100,29 @@ def transform_json_structure(input_file, output_file):
 
 
 
-if __name__ == "__main__":
-    with open("stock_classified.json","r",encoding="UTF-8") as f:
-        datas = json.load(f)
-        pass
-    symbols =[]
-    cnt=0
-    for data in datas:
-        if cnt >= 5000:
-            break
-        cnt+=1
-        if cnt>=4000:
-            if data['market_type'] == '上市':
-                symbols.append(data['id']+'.TW')
-            elif data['market_type'] =='上櫃':
-                symbols.append(data['id']+'.TWO')
-    
+def getStockData(symbols):
+    if symbols in twstock.codes:
+        market_type = twstock.codes[symbols].market
+    else:
+        # 2. 處理特殊代號 (例如 2881A, 2881B 等特別股)
+        # 邏輯：取出代號中的數字部分 (2881A -> 2881) 再查一次
+        parent_id = ''.join(filter(str.isdigit, symbols))
+        
+        if parent_id and parent_id in twstock.codes:
+            market_type = twstock.codes[parent_id].market
+        else:
+            # 3. 最後檢查：如果是 4 碼且以 00 開頭 (ETF)，通常 twstock 會有，
+            # 若真的沒有，大部分 ETF 在台灣多為上市，但為了準確保留 '未知' 或視需求手動調整。
+            pass
+    if market_type =="上市":
+        symbols = symbols + ".TW"
+    else :
+        symbols = symbols + ".TWO"
+
+
     res = yf.download(symbols,start="2021-01-01",end=datetime.datetime.today(), interval="1d", group_by='ticker', threads=True)
-    res.to_json("ch_data4.json", date_format='iso')
-    transform_json_structure("ch_data4.json", "ch_trans_data4.json")
+    res.to_json("ch_data.json", date_format='iso')
+    transform_json_structure("ch_data.json", "ch_trans_data.json")
+    with open("ch_trans_data.json","r",encoding="UTF-8") as f:
+        res = json.load(f)
+    return res

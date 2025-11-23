@@ -12,6 +12,8 @@ const api = axios.create({
   timeout: 1000000, // 請求超時
 });
 
+
+
 // 建立「請求攔截器」
 //    在 "每一次" API 請求 "發送出去之前" 執行
 api.interceptors.request.use(
@@ -42,7 +44,7 @@ api.interceptors.response.use(
   },
   (error: AxiosError) => { // 明確指定 error 型別
     // 失敗的回應 (4xx, 5xx 狀態碼)
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 403) {
       // 代表 Token 失效或被竄改
       // 我們可以自動執行 "登出"
       const authStore = useAuthStore();
@@ -53,8 +55,10 @@ api.interceptors.response.use(
       console.log('連線逾時，請重新登入');
       router.push({
         path: '/login',
-        query: { redirect: router.currentRoute.value.fullPath }
       });
+
+      // location.reload();
+  
     }
     return Promise.reject(error);
   }

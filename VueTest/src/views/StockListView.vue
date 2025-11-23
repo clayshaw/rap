@@ -13,6 +13,7 @@ import stocksData from '@/assets/stock.json'
 import Card from '@/components/ui/Card.vue'
 import CardContent from '@/components/ui/CardContent.vue'
 import CardHeader from '@/components/ui/CardHeader.vue'
+import axios from 'axios';
 
 // 定義股票資料的型別
 interface Stock {
@@ -31,8 +32,8 @@ interface CandleData {
 }
 
 // 請在此處替換為你的 Fugle API Key
-const FUGLE_API_KEY =
-  'MTFmY2NmNjctNzNiMS00YWFmLTg5ODQtMDMwZjg2OTk3ZWY4IDFiYmRmNTk4LWJjZWUtNDE0NS04MjBlLTVhZmY3MjUxODRkOQ=='
+// const FUGLE_API_KEY =
+//   'MTFmY2NmNjctNzNiMS00YWFmLTg5ODQtMDMwZjg2OTk3ZWY4IDFiYmRmNTk4LWJjZWUtNDE0NS04MjBlLTVhZmY3MjUxODRkOQ=='
 
 // 狀態
 const searchQuery = ref('')
@@ -71,20 +72,20 @@ const filteredStocks = computed(() => {
   return result.slice(0, 100)
 })
 
-// 獲取一年前的日期
-const getOneYearAgo = () => {
-  const date = new Date()
-  date.setFullYear(date.getFullYear() - 1)
-  const today = new Date()
-  return date > today ? today.toISOString().split('T')[0] : date.toISOString().split('T')[0]
-}
+// // 獲取一年前的日期
+// const getOneYearAgo = () => {
+//   const date = new Date()
+//   date.setFullYear(date.getFullYear() - 1)
+//   const today = new Date()
+//   return date > today ? today.toISOString().split('T')[0] : date.toISOString().split('T')[0]
+// }
 
-// 獲取昨天的日期
-const getYesterday = () => {
-  const date = new Date()
-  date.setDate(date.getDate() - 1)
-  return date.toISOString().split('T')[0]
-}
+// // 獲取昨天的日期
+// const getYesterday = () => {
+//   const date = new Date()
+//   date.setDate(date.getDate() - 1)
+//   return date.toISOString().split('T')[0]
+// }
 
 // 從 Fugle API 獲取歷史股價資料
 const fetchStockData = async (stockId: string) => {
@@ -92,27 +93,18 @@ const fetchStockData = async (stockId: string) => {
   error.value = ''
 
   try {
-    const fromDate = getOneYearAgo()
-    const toDate = getYesterday()
 
-    const url = `https://api.fugle.tw/marketdata/v1.0/stock/historical/candles/${stockId}`
+    const api = axios.create({
+      baseURL: 'http://127.0.0.1:5000', // 你的後端 API 基礎 URL
+      timeout: 100000, // 請求超時
+    });
 
-    const params = new URLSearchParams({
-      from: fromDate,
-      to: toDate,
-      fields: 'open,high,low,close,volume',
-    } as Record<string, string>)
 
-    const response = await fetch(`${url}?${params}`, {
-      method: 'GET',
-      headers: {
-        'X-API-KEY': FUGLE_API_KEY,
-        'Content-Type': 'application/json',
-      },
+    const response = await api.post("/api/getStockData",{
+      symbol:stockId
     })
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
+    if (!response) {
         // 清除舊圖表
       if (chart) {
         chart.remove()
@@ -123,13 +115,13 @@ const fetchStockData = async (stockId: string) => {
         resizeObserver = null
       }
       throw new Error(
-        `API 請求失敗: ${response.status} - ${errorData.message || '請檢查 API Key 或股票代號'}`,
+        `API 請求失敗: ${response} || '請檢查 API Key 或股票代號'}`,
       )
     }
 
-    const data = await response.json()
+    
     // console.log('獲取的股價資料:', data)
-    return data.data || []
+    return response.data["data"]|| []
   } catch (err) {
     error.value = err instanceof Error ? err.message : '獲取資料失敗'
     console.error('獲取股價資料錯誤:', err)
@@ -347,6 +339,7 @@ onMounted(async () => {
           {{ selectedStock?.name || '台積電' }}
           <span class="text-lg text-gray-500 font-normal">({{ currentSymbol }})</span>
         </h1>
+        <span class="text-gray-500 font-normal" style=" font-size:x-small;">資料來源:Fugle API</span>
       </CardHeader>
 
       <CardContent class="flex-1 relative bg-white shadow-lg rounded-lg overflow-hidden">
