@@ -100,14 +100,24 @@ def transform_json_structure(input_file, output_file):
 
 
 
-def fetch_ch_stock_data(symbol):
-    df = yf.Ticker(symbol + '.TWO')
-    df = df.history(period="1d",interval="1d",auto_adjust=False,actions=False)
-    if df.empty:
-        symbol = ( symbol +'.TW')
-    else:
-        symbol = ( symbol +'.TWO')
-    data = yf.download(symbol,start="2021-01-01",end=datetime.date.today(), interval="1d", group_by='ticker', threads=True)
-    data.to_json("ch_data.json",date_format='iso')
-    transform_json_structure("ch_data.json", "ch_trans_data.json")
 
+
+if __name__ == "__main__":
+    with open("stock_classified.json","r",encoding="UTF-8") as f:
+        datas = json.load(f)
+        pass
+    symbols =[]
+    cnt=0
+    for data in datas:
+        if cnt >= 5000:
+            break
+        cnt+=1
+        if cnt>=4000:
+            if data['market_type'] == '上市':
+                symbols.append(data['id']+'.TW')
+            elif data['market_type'] =='上櫃':
+                symbols.append(data['id']+'.TWO')
+    
+    res = yf.download(symbols,start="2021-01-01",end=datetime.datetime.today(), interval="1d", group_by='ticker', threads=True)
+    res.to_json("ch_data4.json", date_format='iso')
+    transform_json_structure("ch_data4.json", "ch_trans_data4.json")

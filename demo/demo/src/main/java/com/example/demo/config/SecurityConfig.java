@@ -91,7 +91,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of(
             "http://localhost:5173",
             "http://10.244.208.177:5173/",
-            "http://192.168.0.104:5173/"
+            "http://192.168.0.102:5173/"
             )); 
         
         // 允許所有請求方法 (GET, POST, PUT, DELETE...)

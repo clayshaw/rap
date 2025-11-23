@@ -42,6 +42,8 @@ public class User implements UserDetails{
         return List.of(new SimpleGrantedAuthority("ROLE_USER")); 
     }
 
+
+
     @Override
     public boolean isAccountNonExpired() {
         // 帳號是否未過期

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Search, Menu } from 'lucide-vue-next'
+// import { Search, Menu } from 'lucide-vue-next'
 
 defineProps<{
   onToggleSidebar: () => void
@@ -10,6 +10,7 @@ defineProps<{
 const searchQuery = ref('')
 
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const handleSearch = (e: Event) => {
   e.preventDefault()
   console.log('Search:', searchQuery.value)
@@ -19,7 +20,8 @@ const handleSearch = (e: Event) => {
 </script>
 
 <template>
-  <nav class="bg-card border-b sticky top-0 z-40">
+  <span></span>
+  <!-- <nav class="bg-card border-b sticky top-0 z-40">
     <div class="px-4 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-4">
@@ -44,7 +46,7 @@ const handleSearch = (e: Event) => {
           </form>
         </div>
 
-        <!-- <div class="flex items-center gap-2">
+         <div class="flex items-center gap-2">
           <button
             @click="onToggleSidebar"
             class="hidden lg:block p-2 hover:bg-accent rounded-md"
@@ -64,7 +66,7 @@ const handleSearch = (e: Event) => {
               leave-to-class="transform opacity-0 scale-95"
             >
             </transition>
-          </div> -->
+          </div> 
         </div>
       </div>
 
@@ -82,5 +84,5 @@ const handleSearch = (e: Event) => {
         </form>
       </div>
 
-  </nav>
+  </nav> -->
 </template>

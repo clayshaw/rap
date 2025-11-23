@@ -64,6 +64,12 @@ public class UserService {
         return jwtService.generateToken(username);
     }
 
+    public User updateEmail(String email,String name){
+        User user = findByUsername(name);
+        user.setEmail(email);
+        return userRepository.save(user);
+    }
+
     /**
      * 根據用戶名稱查找用戶
      * @param username 用戶名稱

@@ -5,7 +5,7 @@ import CardHeader from '@/components/ui/CardHeader.vue'
 import CardTitle from '@/components/ui/CardTitle.vue'
 import CardContent from '@/components/ui/CardContent.vue'
 import Button from '@/components/ui/Button.vue'
-import { Users,  TrendingUp, DollarSign } from 'lucide-vue-next'
+import { Users,  TrendingUp, DollarSign , ChevronDown, ChevronRight} from 'lucide-vue-next'
 import { Line } from 'vue-chartjs'
 import { ref, onMounted} from 'vue';
 import api from '@/api';
@@ -60,18 +60,7 @@ interface RecommendationItem {
 
 const newsList = ref<NewsItem[]>([]);
 const loadingNews = ref(false);
-
-// 計算按股票代碼分組的新聞
-const groupedNews = computed(() => {
-  const groups: Record<string, NewsItem[]> = {};
-  newsList.value.forEach(news => {
-    const key = news.stockSymbol ?? 'unknown';
-    groups[key] = groups[key] ?? [];
-    groups[key].push(news);
-  });
-  return groups;
-});
-
+const expandedGroups = ref<Record<string, boolean>>({});
 const totalAssets = ref(0);
 const loadingHistory = ref(false);
 const historyList = ref<PortfolioItem[]>([]);
@@ -79,11 +68,14 @@ const recommendations = ref<string[]>([]);
 const recommendationItems = ref<RecommendationItem[]>([]);
 const isRecommendationsClicked = ref(false);
 
+
+
+
+
 const fetchNews = async () => {
   loadingNews.value = true;
   try {
     const response = await api.get<NewsItem[]>('/api/news');
-    console.log('取得新聞成功:', response.data);
     newsList.value = response.data;
   } catch (err) {
     console.error('取得新聞失敗:', err);
@@ -107,7 +99,7 @@ const fetchTotalAssets = async () => {
       const item = data[i];
       if (item && typeof item.quantity === 'number' && typeof item.purchasePrice === 'number') {
         totalAssets.value += item.quantity * item.purchasePrice;
-      }
+        }
     }
     historyList.value = data;
   } catch (err) {
@@ -117,6 +109,7 @@ const fetchTotalAssets = async () => {
   }
   
 };
+
 
 const revenueData = computed<ChartData<'line'>>(() => ({
   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
@@ -131,6 +124,7 @@ const revenueData = computed<ChartData<'line'>>(() => ({
     }
   ]
 }))
+
 
 const revenueOptions = computed<ChartOptions<'line'>>(() => ({
   responsive: true,
@@ -187,6 +181,28 @@ const fetRecommandations = async () => {
     console.error('取得推薦失敗:', err);
   }
 };
+
+const toggleGroup = (symbol: string) => {
+  expandedGroups.value[symbol] = !expandedGroups.value[symbol];
+};
+
+
+// 計算屬性：將新聞列表依 stockSymbol 分組
+const groupedNews = computed(() => {
+  const groups: Record<string, NewsItem[]> = {};
+  if (!newsList.value) return groups;
+
+  newsList.value.forEach(news => {
+    // 如果後端沒有回傳 symbol，就歸類為 "Other"
+    const symbol = news.stockSymbol || 'Other';
+    if (!groups[symbol]) {
+      groups[symbol] = [];
+    }
+    groups[symbol].push(news);
+  });
+  return groups;
+});
+
 
 onMounted(() => {
   fetchNews();
@@ -245,6 +261,7 @@ onMounted(() => {
         <div class="h-[300px]">
           <Line :data="revenueData" :options="revenueOptions" />
         </div>
+
       </CardContent>
     </Card>
 
@@ -254,41 +271,48 @@ onMounted(() => {
           <CardTitle>新聞</CardTitle>
         </CardHeader>
         <CardContent>
-          
-          <div v-if="loadingNews" class="text-muted-foreground">
-            讀取新聞中...
-          </div>
-
-          <div v-else-if="newsList.length === 0" class="text-muted-foreground">
-            目前沒有新聞。
-          </div>
-
-          <div v-else class="space-y-6">
-            <!-- 按股票代碼分組顯示 -->
-            <div v-for="(newsItems, stockSymbol) in groupedNews" :key="stockSymbol" class="space-y-3">
-              <h3 class="text-sm font-semibold text-blue-600 border-b pb-2">{{ stockSymbol }}</h3>
-              <div class="space-y-3">
-                <div v-for="news in newsItems" :key="news.id" class="flex items-start gap-3 pl-2">  
-                  <div class="w-2 h-2 rounded-full mt-2 bg-blue-600 hover:bg-blue-700"></div>
-                  <div class="flex-1">
-                    <p class="text-sm font-medium">
-                      <a :href="news.url" target="_blank" rel="noopener noreferrer" class="hover:underline">
-                        {{ news.title }}
-                      </a>
-                    </p>
-                    <p class="text-xs text-muted-foreground mt-1">
-                      {{ new Date(news.createdAt).toLocaleString('zh-TW', { 
-                        month: 'short', 
-                        day: 'numeric', 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
-                      }) }}
-                    </p>
+          <div class="space-y-4">
+            
+            <div v-if="loadingNews" class="text-sm text-muted-foreground">讀取新聞中...</div>
+            
+            <div v-else-if="newsList.length > 0" class="space-y-2">
+              
+              <div v-for="(items, symbol) in groupedNews" :key="symbol" class="border rounded-lg overflow-hidden">
+                
+                <button 
+                  @click="toggleGroup(String(symbol))"
+                  class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+                >
+                  <div class="flex items-center gap-2">
+                    <component 
+                      :is="expandedGroups[String(symbol)] ? ChevronDown : ChevronRight" 
+                      class="h-4 w-4 text-muted-foreground"
+                    />
+                    <span class="font-medium">{{ symbol }}</span>
+                    <span class="text-xs text-muted-foreground bg-white px-2 py-0.5 rounded-full border">
+                      {{ items.length }}
+                    </span>
                   </div>
+                </button>
 
+                <div v-if="expandedGroups[String(symbol)]" class="border-t bg-white">
+                  <ul class="divide-y">
+                    <li v-for="news in items" :key="news.id" class="p-3 hover:bg-gray-50 transition-colors">
+                      <a :href="news.url" target="_blank" rel="noopener noreferrer" class="flex items-start gap-3 group">
+                        <div class="w-2 h-2 bg-blue-600 rounded-full mt-1.5 shrink-0"></div>
+                        <span class="text-sm group-hover:text-blue-600 group-hover:underline transition-colors">
+                          {{ news.title }}
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
                 </div>
+
               </div>
             </div>
+
+            <p v-else class="text-sm text-muted-foreground">目前沒有新聞。</p>
+
           </div>
         </CardContent>
       </Card>
@@ -316,3 +340,5 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+

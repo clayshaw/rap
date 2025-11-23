@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,5 +39,23 @@ public class UserController {
         user.setPassword(null); 
         
         return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/updateEmail")
+    public User emailUpdater(@RequestBody String newemail ,@AuthenticationPrincipal UserDetails userDetail) {
+        
+        String tmp = "";
+        for (int i=0;i<newemail.length()-1;i++){
+            if(newemail.charAt(i) == '%'){
+                tmp = tmp + '@';
+                i+=3;
+            }
+            tmp  = tmp + newemail.charAt(i);
+        }
+        newemail = tmp;
+        System.out.println(newemail);
+        User user = userService.updateEmail(newemail,userDetail.getUsername());
+        user.setPassword(null);
+        return user;
     }
 }

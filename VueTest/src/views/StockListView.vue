@@ -113,6 +113,15 @@ const fetchStockData = async (stockId: string) => {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
+        // 清除舊圖表
+      if (chart) {
+        chart.remove()
+        chart = null
+      }
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+        resizeObserver = null
+      }
       throw new Error(
         `API 請求失敗: ${response.status} - ${errorData.message || '請檢查 API Key 或股票代號'}`,
       )
@@ -327,7 +336,7 @@ onMounted(async () => {
         </div>
 
         <div v-if="filteredStocks.length === 0" class="text-center text-gray-500 mt-10">
-          找不到符合的股票
+          找不到符合的股票(可能已下市)
         </div>
       </div>
     </CardContent>
