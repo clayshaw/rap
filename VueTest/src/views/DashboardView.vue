@@ -6,7 +6,6 @@ import CardTitle from '@/components/ui/CardTitle.vue'
 import CardContent from '@/components/ui/CardContent.vue'
 import Button from '@/components/ui/Button.vue'
 import { Users,  TrendingUp, DollarSign , ChevronDown, ChevronRight} from 'lucide-vue-next'
-import { Line } from 'vue-chartjs'
 import { ref, onMounted} from 'vue';
 import api from '@/api';
 import {
@@ -19,10 +18,9 @@ import {
   Tooltip,
   Legend,
   Filler,
-  type ChartData,
-  type ChartOptions
 } from 'chart.js'
 import '@/assets/index.css'
+import axios from 'axios'
 
 ChartJS.register(
   CategoryScale,
@@ -67,6 +65,7 @@ const historyList = ref<PortfolioItem[]>([]);
 const recommendations = ref<string[]>([]);
 const recommendationItems = ref<RecommendationItem[]>([]);
 const isRecommendationsClicked = ref(false);
+const mockPrices = ref<any[]>([]);
 
 
 
@@ -111,49 +110,6 @@ const fetchTotalAssets = async () => {
 };
 
 
-const revenueData = computed<ChartData<'line'>>(() => ({
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  datasets: [
-    {
-      label: 'Revenue',
-      data: [3000, 5000, 4000, 7000, 6000, 8000],
-      borderColor: 'rgb(59, 130, 246)',
-      backgroundColor: 'rgba(59, 130, 246, 0.1)',
-      tension: 0.4,
-      fill: true
-    }
-  ]
-}))
-
-
-const revenueOptions = computed<ChartOptions<'line'>>(() => ({
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false
-    },
-    tooltip: {
-      callbacks: {
-        label: (context) => {
-          const value = context.parsed.y
-          if(value != null){
-            return `Revenue: $${(value / 1000).toFixed(0)}k`
-          }
-        }
-      }
-    }
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
-      ticks: {
-        callback: (value) => `$${(Number(value) / 1000).toFixed(0)}k`
-      }
-    }
-  }
-}))
-
 const fetRecommandations = async () => {
   try {
     isRecommendationsClicked.value = true;
@@ -186,6 +142,24 @@ const toggleGroup = (symbol: string) => {
   expandedGroups.value[symbol] = !expandedGroups.value[symbol];
 };
 
+const getCurrentPrice = (symbol: string): number => {
+  // 模擬取得當前價格的函式，實際應該從 API 或其他資料來源取得
+  
+  for (let i = 0; i < mockPrices.value.length; i++) {
+    if (mockPrices.value[i]["Name"] === symbol) {
+      console.log("Found price for ", symbol, ": ", mockPrices.value[i]["ClosingPrice"]);
+      return mockPrices.value[i]["ClosingPrice"];
+    }
+  }
+  return 0;
+};
+
+const calculateProfitLoss =(item: PortfolioItem): number => {
+  // 假設有一個函式 getCurrentPrice(symbol: string): number 可以取得當前價格
+  const currentPrice = getCurrentPrice(item.stockSymbol);
+  return (currentPrice - item.purchasePrice) * item.quantity;
+};
+
 
 // 計算屬性：將新聞列表依 stockSymbol 分組
 const groupedNews = computed(() => {
@@ -203,10 +177,23 @@ const groupedNews = computed(() => {
   return groups;
 });
 
+const fetchCurrentPrices = async () => {
+  try {
+    const tmpapi = axios.create({
+      baseURL: '/twse', // 使用代理的 baseURL
+    });
+    const response = await tmpapi.get('/v1/exchangeReport/STOCK_DAY_AVG_ALL');
+    mockPrices.value = response.data;
+    console.log("Fetched current prices:", mockPrices.value);
+  } catch (err) {
+    console.error('取得當前價格失敗:', err);
+  }
+};
 
 onMounted(() => {
   fetchNews();
   fetchTotalAssets();
+  fetchCurrentPrices();
   // fetRecommandations();
 });
 </script>
@@ -255,13 +242,49 @@ onMounted(() => {
 
     <Card>
       <CardHeader>
-        <CardTitle>累計資產</CardTitle>
+        <CardTitle>損益</CardTitle>
       </CardHeader>
       <CardContent>
-        <div class="h-[300px]">
-          <Line :data="revenueData" :options="revenueOptions" />
-        </div>
+        <div class="space-y-2">
+          <div class="hidden md:grid grid-cols-5 gap-5 px-5 py-2 text-sm font-medium text-muted-foreground border-b">
+            <div>Stock Symbol</div>
+            <div>Quantity</div>
+            <div>Purchase Price</div>
+            <div>Current Price</div>
+            <div>Profit/Loss</div>
+          </div>
 
+          <div
+            v-for="item in historyList"
+            :key="item.id"
+            class="flex flex-col md:grid md:grid-cols-5 gap-2 md:gap-5 px-5 py-3 hover:bg-accent rounded-md"
+          >
+            <div class="flex justify-between md:block">
+              <span class="text-sm md:hidden font-medium text-muted-foreground">Stock Symbol</span>
+              <div class="font-medium">{{ item.stockSymbol }}</div>
+            </div>
+            <div class="flex justify-between md:block">
+              <span class="text-sm md:hidden font-medium text-muted-foreground">Quantity</span>
+              <span>{{ item.quantity }}</span>
+            </div>
+            <div class="flex justify-between md:block">
+              <span class="text-sm md:hidden font-medium text-muted-foreground">Purchase Price</span>
+              <span>${{ item.purchasePrice }}</span>
+            </div>
+            <div class="flex justify-between md:block">
+              <span class="text-sm md:hidden font-medium text-muted-foreground">Current Price</span>
+              <span>
+                ${{getCurrentPrice(item.stockSymbol) }}
+              </span>
+            </div>
+            <div class="flex justify-between md:block">
+              <span class="text-sm md:hidden font-medium text-muted-foreground">Profit/Loss</span>
+              <span>
+                ${{calculateProfitLoss(item) }}
+              </span>
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
 

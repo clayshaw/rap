@@ -25,9 +25,10 @@ def get_all_unique_symbols():
         cursor = connection.cursor()
 
         # (*** 關鍵查詢 ***)
-        query = "SELECT DISTINCT stock_symbol FROM portfolios"
-        delete_news = "DELETE FROM news"
+        query = "SELECT DISTINCT stock_symbol FROM portfolios "
+        # delete_news = "DELETE FROM investment_db.news"
         cursor.execute(query)
+        # cursor.execute(delete_news)
         # cursor.commit() # 提交事务
 
         for (stock_symbol,) in cursor:
