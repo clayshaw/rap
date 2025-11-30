@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,24 @@ public class PortfolioService {
                 .map(Portfolio::getStockSymbol) // 轉換: (Portfolio -> "2330")
                 .distinct() // 去除重複
                 .toList(); // 轉換回 List<String>
+    }
+
+    public void removePortfolioItem(String username, Instant createdAt) {
+        // 1. 找到使用者
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 2. 找到該持股紀錄
+        Portfolio portfolioItem = portfolioRepository.findByCreatedAt(createdAt);
+        if (portfolioItem == null) {
+            throw new RuntimeException("Portfolio item not found");
+        }
+        // 3. 確認該持股紀錄屬於該使用者
+        if (!portfolioItem.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized to delete this portfolio item");
+        }
+        // 4. 刪除該持股紀錄
+        portfolioRepository.delete(portfolioItem);
     }
     
 }

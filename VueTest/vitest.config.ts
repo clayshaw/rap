@@ -11,6 +11,7 @@ export default mergeConfig(
       root: fileURLToPath(new URL('./', import.meta.url)),
     },
     server: {
+      host: "0.0.0.0",
       proxy: {
         '/api': {
         // 目標是您的 Spring Boot 伺服器
@@ -21,14 +22,14 @@ export default mergeConfig(
           // (例如 /api/users/me 和 /api/auth/login) 
           // 已經包含了 /api 前綴
         },
-          // (*** 必須要有這一段 ***)
           '/twse': {
-            target: 'https://openapi.twse.com.tw',
-            changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/twse/, '')
-          }
+          target: 'https://openapi.twse.com.tw', // 目標 API 網址
+          changeOrigin: true, // 允許跨域
+          rewrite: (path) => path.replace(/^\/twse/, '') // 將路徑中的 /twse 移除後再發送
+        }
       },
-    host: "0.0.0.0",
+      
+    
     port: 5000,
       hmr: {
         clientPort: 443,

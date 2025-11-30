@@ -132,6 +132,21 @@ const addHolding = async () => {
   }
 };
 
+const removeHolding = async (item: PortfolioItem) => {
+  loading.value = true;
+  error.value = '';
+  try {
+    await api.delete(`/api/portfolio/remove`, { data: { createdAt: item.createdAt } });
+    await fetchHistory(); 
+    // console.log('刪除股票尚未實作');
+  } catch (err) {
+    console.error('刪除持股失敗:', err);
+    error.value = '刪除持股時發生錯誤。';
+  } finally {
+    loading.value = false;
+  }
+};
+
 const formatDateTime = (isoString: string) => {
   if (!isoString) return 'N/A';
   const date = new Date(isoString);
@@ -243,6 +258,7 @@ onMounted(() => {
               <span class="text-sm md:hidden font-medium text-muted-foreground">price</span>
               <span>${{ item.purchasePrice }}</span>
             </div>
+            <Button variant="outline"  @click="removeHolding(item)">Remove</Button>
           </div>
         </div>
       </CardContent>
