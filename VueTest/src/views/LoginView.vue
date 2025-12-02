@@ -1,14 +1,11 @@
 <template>
   <div class="container" :class="{ 'sign-up-mode': isSignUpMode }">
-
-
     <div class="forms-container">
       <div class="signin-signup">
-        
         <form @submit.prevent="handleLogin" class="sign-in-form">
           <h2 class="title">登入 (Sign In)</h2>
-          
-          <p v-if="errorMessage && !isSignUpMode" style="color: red; margin-bottom: 10px;">
+
+          <p v-if="errorMessage && !isSignUpMode" style="color: red; margin-bottom: 10px">
             {{ errorMessage }}
           </p>
 
@@ -23,11 +20,10 @@
           <input type="submit" value="Login" class="btn solid" :disabled="loading" />
         </form>
 
-
         <form @submit.prevent="handleRegister" class="sign-up-form">
           <h2 class="title">註冊 (Sign Up)</h2>
 
-          <p v-if="errorMessage && isSignUpMode" style="color: red; margin-bottom: 10px;">
+          <p v-if="errorMessage && isSignUpMode" style="color: red; margin-bottom: 10px">
             {{ errorMessage }}
           </p>
 
@@ -44,7 +40,7 @@
             <input type="password" placeholder="Password" v-model="registerForm.password" />
           </div>
           <input type="submit" value="Sign Up" class="btn solid" :disabled="loading" />
-          </form>
+        </form>
       </div>
     </div>
 
@@ -52,9 +48,7 @@
       <div class="panel left-panel">
         <div class="content">
           <h3>新來的嗎?</h3>
-          <p>
-            還沒有帳號嗎？點擊按鈕加入我們！
-          </p>
+          <p>還沒有帳號嗎？點擊按鈕加入我們！</p>
           <button class="btn transparent" id="sign-up-btn" @click="isSignUpMode = true">
             註冊 (Sign Up)
           </button>
@@ -64,9 +58,7 @@
       <div class="panel right-panel">
         <div class="content">
           <h3>已經是我們的一員了?</h3>
-          <p>
-            已經有帳號了？點擊按鈕直接登入！
-          </p>
+          <p>已經有帳號了？點擊按鈕直接登入！</p>
           <button class="btn transparent" id="sign-in-btn" @click="isSignUpMode = false">
             登入 (Sign In)
           </button>
@@ -78,117 +70,114 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'; // 1. (*** 修改 ***) 同時匯入 reactive
-import { useAuthStore } from '@/stores/auth';
-import api from '@/api'; 
-import { AxiosError } from 'axios'; 
+import { ref, reactive } from 'vue' // 1. (*** 修改 ***) 同時匯入 reactive
+import { useAuthStore } from '@/stores/auth'
+import api from '@/api'
+import { AxiosError } from 'axios'
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
 // 2. (*** 修改 ***) 這些是 "共用" 的 UI 狀態
-const loading = ref(false);
-const errorMessage = ref('');
-const isSignUpMode = ref(false);
+const loading = ref(false)
+const errorMessage = ref('')
+const isSignUpMode = ref(false)
 
-// 3. (*** 關鍵 ***) 
+// 3. (*** 關鍵 ***)
 //    用 "reactive" 建立 "登入" 專用的資料物件
 const loginForm = reactive({
   username: '',
-  password: ''
-});
+  password: '',
+})
 
-// 4. (*** 關鍵 ***) 
+// 4. (*** 關鍵 ***)
 //    用 "reactive" 建立 "註冊" 專用的資料物件
 const registerForm = reactive({
   username: '',
   email: '',
-  password: ''
-});
+  password: '',
+})
 
 // 5. (*** 這是你要的 ***)
 //    實作 handleRegister 函式
 const handleRegister = async () => {
-  loading.value = true;
-  errorMessage.value = '';
+  loading.value = true
+  errorMessage.value = ''
 
   // 檢查密碼是否為空
   if (!registerForm.password) {
-      errorMessage.value = "密碼不可為空";
-      loading.value = false;
-      return;
+    errorMessage.value = '密碼不可為空'
+    loading.value = false
+    return
   }
-  
+
   try {
     // 呼叫後端的註冊 API (我們後端已準備好)
     await api.post('/api/auth/register', {
       username: registerForm.username,
       email: registerForm.email,
-      password: registerForm.password
-    });
+      password: registerForm.password,
+    })
 
     // 註冊成功
-    alert('註冊成功！請使用您的新帳號登入。');
-    
-    // 清空註冊表單
-    registerForm.username = '';
-    registerForm.email = '';
-    registerForm.password = '';
-    
-    // (*** 關鍵 ***) 自動切換回「登入」面板
-    isSignUpMode.value = false;
+    alert('註冊成功！請使用您的新帳號登入。')
 
+    // 清空註冊表單
+    registerForm.username = ''
+    registerForm.email = ''
+    registerForm.password = ''
+
+    // (*** 關鍵 ***) 自動切換回「登入」面板
+    isSignUpMode.value = false
   } catch (err) {
-    console.error('註冊失敗:', err);
+    console.error('註冊失敗:', err)
     if (err instanceof AxiosError && err.response) {
       // 顯示後端傳來的驗證錯誤 (例如 "Username is already taken!")
-      errorMessage.value = err.response.data.message;
+      errorMessage.value = err.response.data.message
     } else {
-      errorMessage.value = '發生未知的錯誤。';
+      errorMessage.value = '發生未知的錯誤。'
     }
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 // (登入 API 需要的型別)
 interface LoginResponse {
-  token: string;
+  token: string
 }
 
 // 6. (*** 修改 ***)
 //    讓 handleLogin 函式去使用 "loginForm"
 const handleLogin = async () => {
-  loading.value = true;
-  errorMessage.value = '';
+  loading.value = true
+  errorMessage.value = ''
   try {
     const response = await api.post<LoginResponse>('/api/auth/login', {
       username: loginForm.username, // <-- 使用 loginForm
-      password: loginForm.password  // <-- 使用 loginForm
-    });
-    
-    authStore.login(response.data.token);
+      password: loginForm.password, // <-- 使用 loginForm
+    })
 
+    authStore.login(response.data.token)
   } catch (error) {
-    console.error('登入失敗:', error);
+    console.error('登入失敗:', error)
     if (error instanceof AxiosError) {
       // (我幫你修正了 403 錯誤的判斷)
       if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-        errorMessage.value = error.response.data.message;
+        errorMessage.value = error.response.data.message
       } else {
-        errorMessage.value = '登入時發生錯誤，請稍後再試。';
+        errorMessage.value = '登入時發生錯誤，請稍後再試。'
       }
     } else {
-      errorMessage.value = '發生未知的錯誤，請檢查網路連線。';
+      errorMessage.value = '發生未知的錯誤，請檢查網路連線。'
     }
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 </script>
 
 <style>
-
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
 
 * {
   margin: 0;
@@ -198,7 +187,7 @@ const handleLogin = async () => {
 
 body,
 input {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .container {
@@ -351,7 +340,7 @@ form.sign-in-form {
 }
 
 .container:before {
-  content: "";
+  content: '';
   position: absolute;
   height: 2000px;
   width: 2000px;
@@ -587,7 +576,5 @@ form.sign-in-form {
     bottom: 28%;
     left: 50%;
   }
-  
 }
-
 </style>

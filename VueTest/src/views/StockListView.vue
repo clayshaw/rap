@@ -13,7 +13,7 @@ import stocksData from '@/assets/stock.json'
 import Card from '@/components/ui/Card.vue'
 import CardContent from '@/components/ui/CardContent.vue'
 import CardHeader from '@/components/ui/CardHeader.vue'
-import axios from 'axios';
+import axios from 'axios'
 
 // 定義股票資料的型別
 interface Stock {
@@ -93,19 +93,17 @@ const fetchStockData = async (stockId: string) => {
   error.value = ''
 
   try {
-
     const api = axios.create({
       baseURL: 'http://127.0.0.1:5000', // 你的後端 API 基礎 URL
       timeout: 100000, // 請求超時
-    });
+    })
 
-
-    const response = await api.post("/api/getStockData",{
-      symbol:stockId
+    const response = await api.post('/api/getStockData', {
+      symbol: stockId,
     })
 
     if (!response) {
-        // 清除舊圖表
+      // 清除舊圖表
       if (chart) {
         chart.remove()
         chart = null
@@ -114,14 +112,11 @@ const fetchStockData = async (stockId: string) => {
         resizeObserver.disconnect()
         resizeObserver = null
       }
-      throw new Error(
-        `API 請求失敗: ${response} || '請檢查 API Key 或股票代號'}`,
-      )
+      throw new Error(`API 請求失敗: ${response} || '請檢查 API Key 或股票代號'}`)
     }
 
-    
     // console.log('獲取的股價資料:', data)
-    return response.data["data"]|| []
+    return response.data['data'] || []
   } catch (err) {
     error.value = err instanceof Error ? err.message : '獲取資料失敗'
     console.error('獲取股價資料錯誤:', err)
@@ -197,7 +192,7 @@ const initChart = () => {
 
   resizeObserver = new ResizeObserver((entries) => {
     if (entries.length === 0 || !chart || !chartContainer.value) return
-    if(entries[0]){
+    if (entries[0]) {
       const newRect = entries[0].contentRect
       chart.applyOptions({
         width: newRect.width,
@@ -339,7 +334,7 @@ onMounted(async () => {
           {{ selectedStock?.name || '台積電' }}
           <span class="text-lg text-gray-500 font-normal">({{ currentSymbol }})</span>
         </h1>
-        <span class="text-gray-500 font-normal" style=" font-size:x-small;">資料來源:Fugle API</span>
+        <span class="text-gray-500 font-normal" style="font-size: x-small">資料來源:Yahoo finance API</span>
       </CardHeader>
 
       <CardContent class="flex-1 relative bg-white shadow-lg rounded-lg overflow-hidden">
