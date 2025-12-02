@@ -10,9 +10,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.example.demo.dto.GeminiChatRequest;
 import com.example.demo.service.GenimiService;
 import com.example.demo.service.PortfolioService;
+
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -25,6 +31,17 @@ public class GeminiChatController {
 
     @Autowired
     private PortfolioService portfolioService;
+
+    @PostMapping("/chat")
+    // 2. (*** 修改 ***) 
+    //    方法參數改用 GeminiChatRequest (它包含 List<GeminiMessageDto>)
+    public String handleChat(
+        @Valid @RequestBody GeminiChatRequest request
+    ) {
+        // 3. (*** 修改 ***) 
+        //    呼叫 "新" 的 generateChatResponse 方法
+        return genimiService.generateChatResponse(request.messages());
+    }
 
     @GetMapping("recommendations")
     public List<String> getRecommendations(@AuthenticationPrincipal UserDetails userDetails) {
@@ -55,5 +72,6 @@ public class GeminiChatController {
          // 這裡需要根據實際需求返回適當的結果
          return recommendations;
     }
+    
     
 }
