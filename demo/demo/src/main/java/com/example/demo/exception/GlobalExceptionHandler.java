@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     /**
-     * [新增] 專門處理認證失敗 (401 Unauthorized)
      * 當 UserService 拋出 BadCredentialsException 時會進入這裡
      */
     @ExceptionHandler(BadCredentialsException.class)
@@ -25,7 +24,6 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 處理其他 RuntimeException (維持原本的 400 Bad Request)
      * 例如註冊時的使用者名稱重複等邏輯錯誤
      */
     @ExceptionHandler(RuntimeException.class)

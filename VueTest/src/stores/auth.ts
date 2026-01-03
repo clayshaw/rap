@@ -8,7 +8,6 @@ export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(localStorage.getItem('authToken'));
   const isAuthenticated = computed(() => !!token.value);
 
-  // *** (新增) ***
   // App 啟動時，如果 localStorage 有 token，就先設定一次標頭
   if (token.value) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
@@ -18,10 +17,10 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = newToken;
     localStorage.setItem('authToken', newToken);
     
-    // 3. (*** 新增 ***) 登入時，"立刻" 更新 axios 的預設標頭
+    // 3. 登入時，"立刻" 更新 axios 的預設標頭
     api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
     
-    // (*** 新增 ***) 登入後自動跳轉
+    // 登入後自動跳轉
     // 檢查路由是否有 'redirect' 參數
     const redirectPath = router.currentRoute.value.query.redirect as string | undefined;
     if (redirectPath) {
@@ -33,13 +32,17 @@ export const useAuthStore = defineStore('auth', () => {
 
   function logout() {
     token.value = null;
-    localStorage.removeItem('authToken');
+    // localStorage.removeItem('authToken');
+    // localStorage.removeItem('__vue-devtools-frame-state__');
+    localStorage.clear(); // 可選：清除其他相關資料
     
-    // 4. (*** 新增 ***) 登出時，"立刻" 移除 axios 的預設標頭
+    // 4. 登出時，"立刻" 移除 axios 的預設標頭
     delete api.defaults.headers.common['Authorization'];
     
-    // (*** 新增 ***) 登出後，跳轉到登入頁
-    router.push('/login');
+    // 登出後，跳轉到登入頁
+    router.push('/');
+
+    
   }
 
   return { token, isAuthenticated, login, logout }

@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter; // <-- 確保你有這個 import
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.demo.service.JwtService;
 
@@ -24,7 +24,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    @Lazy // (你之前加的 @Lazy 保持不動)
+    @Lazy
     private UserDetailsService userDetailsService;
 
     @Override
@@ -38,17 +38,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         //    我們就 "跳過" 這個 JWT 驗證，直接放行
         if (request.getServletPath().contains("/api/auth")) {
             filterChain.doFilter(request, response);
-            return; // (*** 重要的是 "return" ***)
+            return;
         }
-        // --- (*** 結束新增 ***) ---
-
-
-        // --- (以下是你 "舊" 的邏輯，保持不變) ---
         
         //取得 "Authorization" 標頭
         final String authHeader = request.getHeader("Authorization");
         
-        // 3. 檢查標頭是否存在...
+        //檢查標頭是否存在...
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response); 
             return;
@@ -82,7 +78,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         .buildDetails(request)
                 );
                 
-                // (最關鍵) 將此驗證結果放入 SecurityContext
+                // 將此驗證結果放入 SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }

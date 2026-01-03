@@ -5,7 +5,7 @@ import router from '@/router' // 匯入 Vue Router
 
 //建立一個客製化的 axios 實例
 const api = axios.create({
-  baseURL: 'https://kk7bkz41-5173.asse.devtunnels.ms/', // 你的後端 API 基礎 URL
+  baseURL: 'http://localhost:5173/', // 你的後端 API 基礎 URL
   timeout: 1000000, // 請求超時
 })
 

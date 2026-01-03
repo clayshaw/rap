@@ -13,7 +13,7 @@ import '@/assets/index.css' //
 
 // 2. 定義訊息的型別
 interface Message {
-  role: 'user' | 'model' // 'user' 是你, 'model' 是 AI
+  role: 'user' | 'model'
   content: string
 }
 
@@ -48,7 +48,7 @@ const handleSend = async () => {
       messages: fullHistory, // <-- 傳送完整歷史
     })
 
-    // 4. 成功後，將 AI 的回覆加入列表
+    
     messages.value.push({ role: 'model', content: response.data })
   } catch (err) {
     if (err instanceof AxiosError) {

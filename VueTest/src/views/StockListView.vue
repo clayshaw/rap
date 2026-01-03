@@ -31,9 +31,7 @@ interface CandleData {
   volume: number
 }
 
-// 請在此處替換為你的 Fugle API Key
-// const FUGLE_API_KEY =
-//   'MTFmY2NmNjctNzNiMS00YWFmLTg5ODQtMDMwZjg2OTk3ZWY4IDFiYmRmNTk4LWJjZWUtNDE0NS04MjBlLTVhZmY3MjUxODRkOQ=='
+
 
 // 狀態
 const searchQuery = ref('')
@@ -45,7 +43,6 @@ const loading = ref(false)
 const error = ref('')
 
 let chart: IChartApi | null = null
-// 修正 1: 指定正確的 Series 型別，解決 ESLint 'any' 錯誤
 let candlestickSeries: ISeriesApi<'Candlestick'> | null = null
 let volumeSeries: ISeriesApi<'Histogram'> | null = null
 let resizeObserver: ResizeObserver | null = null
@@ -60,16 +57,36 @@ const getMarket = (stock: Stock) => {
 
 // 搜尋過濾
 const filteredStocks = computed(() => {
-  const query = searchQuery.value.toLowerCase()
+  const query = searchQuery.value.toLowerCase().trim() // 加上 trim 去除頭尾空白
+  
+  // 1. 先將原始資料轉換為 Stock[]
   let result = stocksData as Stock[]
 
+  // 2. 進行搜尋過濾
   if (query) {
     result = result.filter(
-      (s) => s.id.includes(query) || s.name.includes(query) || s.industry_category.includes(query),
+      (s) => 
+        s.id.toLowerCase().includes(query) || 
+        s.name.toLowerCase().includes(query) || 
+        s.industry_category.toLowerCase().includes(query)
     )
   }
 
-  return result.slice(0, 100)
+  // 3. 【關鍵修正】對結果進行「去重」，確保每個 ID 只出現一次
+  const uniqueResult: Stock[] = []
+  const seenIds = new Set<string>()
+
+  for (const stock of result) {
+    if (!seenIds.has(stock.id)) {
+      seenIds.add(stock.id)
+      uniqueResult.push(stock)
+    }
+  }
+
+  console.log('過濾並去重後的股票數量:', uniqueResult.length)
+
+  // 4. 回傳前 100 筆
+  return uniqueResult.slice(0, 100)
 })
 
 // // 獲取一年前的日期
@@ -87,7 +104,6 @@ const filteredStocks = computed(() => {
 //   return date.toISOString().split('T')[0]
 // }
 
-// 從 Fugle API 獲取歷史股價資料
 const fetchStockData = async (stockId: string) => {
   loading.value = true
   error.value = ''
@@ -305,8 +321,8 @@ onMounted(async () => {
 
       <div class="flex-1 overflow-y-auto p-2 space-y-2">
         <div
-          v-for="stock in filteredStocks"
-          :key="stock.id"
+          v-for="(stock, index) in filteredStocks"
+          :key="`${stock.id}_${index}`"  
           @click="selectStock(stock)"
           class="p-3 rounded-lg cursor-pointer transition-colors duration-200 flex justify-between items-center"
           :class="

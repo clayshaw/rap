@@ -161,7 +161,6 @@ const handleLogin = async () => {
   } catch (error) {
     console.error('登入失敗:', error)
     if (error instanceof AxiosError) {
-      // (我幫你修正了 403 錯誤的判斷)
       if (error.response && (error.response.status === 401 || error.response.status === 403)) {
         errorMessage.value = error.response.data.message
       } else {

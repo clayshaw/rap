@@ -99,9 +99,9 @@
 修改 `src/main/resources/application.properties`：
 
 #### 資料庫連線設定
-* **spring.datasource.url=**
-* **spring.datasource.username=root**
-* **spring.datasource.password=你的密碼**
+    spring.datasource.url=
+    spring.datasource.username=root
+    spring.datasource.password=你的密碼
 
 ### 2.執行應用程式
 使用 Maven 進行建置與執行：
@@ -155,7 +155,13 @@
 ## 📦 安裝與執行 (Installation)
 
 ### 1. 安裝 Python 套件
+    #創建並啟動虛擬環境 (可選)：    
 
+    python -m venv venv
+    source venv/bin/activate  # Linux/Mac
+    venv\Scripts\activate     # Windows
+
+    #安裝套件
     pip install flask flask-cors pandas requests beautifulsoup4 mysql-connector-python yfinance
 
 
@@ -183,8 +189,6 @@ Server: http://localhost:5000
     python use_request_spider.py
 ## ⚙️ 注意事項 (Notes)
 * 請確保 MySQL 服務已啟動，且資料庫 `investment_db` 已建立。
-* 爬蟲腳本可設定為排程任務 (如 cron job)
-* 以定期更新新聞資料。
-* 爬蟲腳本使用了 INSERT IGNORE 語法，避免重複寫入相同的新聞資料。
+* 爬蟲腳本可設定為排程任務 (如 cron job)  以定期更新新聞資料。
 * API 服務僅提供股票歷史數據，請確保前端呼叫的 URL 正確。
 * 請注意爬蟲頻率，避免被目標網站封鎖 IP。

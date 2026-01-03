@@ -2,6 +2,9 @@
 import { ref, onMounted } from 'vue'
 import api from '@/api'
 import Button from '@/components/ui/Button.vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
 
 const userData = ref({
   username: '',
@@ -59,14 +62,6 @@ const handleUpdate = async () => {
   }
 }
 
-const handleLogout = () => {
-  try {
-    window.location.href = '/login'
-    localStorage.removeItem('authToken')
-  } catch (error) {
-    console.error('登出失敗:', error)
-  }
-}
 </script>
 
 <template>
@@ -157,7 +152,7 @@ const handleLogout = () => {
         </div>
       </form>
       <Button
-        @click="handleLogout"
+        @click="authStore.logout"
         class="mt-4  hover:bg-red-500 text-white backgroundcolor: bg-red-600"
       >
         登出
